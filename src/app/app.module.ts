@@ -13,6 +13,8 @@ import {EditParametersComponent} from './edit-parameters/edit-parameters.compone
 import {AvailableDaysComponent} from './available-days/available-days.component';
 import {ListTeamComponent} from './list-team/list-team.component';
 import {ManageTeamComponent} from './manage-team/manage-team.component';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [
@@ -34,6 +36,12 @@ import {ManageTeamComponent} from './manage-team/manage-team.component';
     // standalone components until i found how to make them work here without this
     ClarityModule,
     ReactiveFormsModule,
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: environment.production,
+      // Register the ServiceWorker as soon as the application is stable
+      // or after 30 seconds (whichever comes first).
+      registrationStrategy: 'registerWhenStable:30000'
+    }),
     //AddTeammateComponent,
     //CreateTeamComponent,
   ],
