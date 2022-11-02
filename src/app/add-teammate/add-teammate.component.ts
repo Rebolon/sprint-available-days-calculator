@@ -1,12 +1,14 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {FormControl, FormGroup, ReactiveFormsModule} from "@angular/forms";
-import {TeamService} from "../create-team/team.service";
+import {TeamService} from "../manage-team/team.service";
 import TeammateI, {Teammate} from "./teammate";
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-add-teammate',
   //standalone: true,
   template: `
+    <h1>{{editedTeammate | teammateFormTitle}}</h1>
     <form clrForm clrLayout="horizontal" [formGroup]="formTeammate" (ngSubmit)="addTeammate()">
       <clr-input-container>
         <label for="name">Name: </label>
@@ -35,8 +37,12 @@ import TeammateI, {Teammate} from "./teammate";
         </clr-checkbox-wrapper>
       </clr-checkbox-container>
 
-      <button type="submit" class="btn btn-icon btn-primary btn-block" aria-label="add">
-        <clr-icon shape="plus"></clr-icon>
+      <button type="submit" class="btn btn-icon btn-primary" aria-label="add" [attr.title]="getButtonText()">
+        <clr-icon [attr.shape]="getButtonIcon()"></clr-icon>
+      </button>
+
+      <button *ngIf="!editedTeammate" (click)="addTeammate(true)" type="button" class="btn btn-icon btn-secondary" aria-label="add-and-go-on-manage">
+        <clr-icon shape="logout"></clr-icon>
       </button>
     </form>
   `,
@@ -45,15 +51,12 @@ import TeammateI, {Teammate} from "./teammate";
   ],*/
   styles: []
 })
-export class AddTeammateComponent implements OnChanges, OnInit {
+export class AddTeammateComponent implements OnChanges {
   @Input() editedTeammate: TeammateI|undefined = undefined
   formTeammate: FormGroup
 
-  constructor(protected teamService: TeamService) {
+  constructor(protected teamService: TeamService, protected router: Router) {
     this.formTeammate = new FormGroup({});
-  }
-
-  ngOnInit() {
     this.formTeammate.addControl('name', new FormControl<string>(this.editedTeammate ? this.editedTeammate.name : ''));
     this.formTeammate.addControl('availableDaysInAWeek', new FormControl<number>(this.editedTeammate ? this.editedTeammate.availableDaysInAWeek : 5));
     this.formTeammate.addControl('holidaysForNextSprint', new FormControl<number>(this.editedTeammate ? this.editedTeammate.holidaysForNextSprint : 0));
@@ -75,7 +78,7 @@ export class AddTeammateComponent implements OnChanges, OnInit {
     }
   }
 
-  addTeammate()
+  addTeammate(redirect = false)
   {
     if (this.formTeammate.invalid) {
       this.formTeammate.markAsTouched()
@@ -95,9 +98,23 @@ export class AddTeammateComponent implements OnChanges, OnInit {
           this.teamService.addTeammate(newTeammate)
         }
         this.formTeammate.reset();
+
+        if (redirect) {
+          this.router.navigateByUrl('manage-team');
+        }
       } catch (e) {
         // @todo add error to form
       }
     }
+  }
+
+  getButtonText()
+  {
+    return this.editedTeammate ? 'edit' : 'add';
+  }
+
+  getButtonIcon()
+  {
+    return this.editedTeammate ? 'note' : 'new';
   }
 }

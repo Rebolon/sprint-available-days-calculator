@@ -1,13 +1,14 @@
 import {Component, Output} from '@angular/core';
 import {FormControl, FormGroup} from "@angular/forms";
-import {TeamService} from "../create-team/team.service";
-import ParameterI, {DefaultParameter, Parameter} from './parameters';
-import {BehaviorSubject} from 'rxjs';
+import ParameterI, {Parameter} from './parameters';
+import {Observable} from 'rxjs';
+import {ParametersService} from './parameters.service';
 
 @Component({
   selector: 'app-edit-parameters',
   //standalone: true,
   template: `
+    <h1>Adapt parameters</h1>
     <form clrForm clrLayout="horizontal" [formGroup]="formParameters">
       <clr-input-container>
         <label for="nbWeeksForOneSprint">Number of weeks in a sprint: </label>
@@ -24,6 +25,8 @@ import {BehaviorSubject} from 'rxjs';
         <input clrInput id="velocityRateForNewComer" type="number" step="0.1" min="0" max="1" formControlName="velocityRateForNewComer" (change)="updateParameters()">
       </clr-input-container>
     </form>
+    
+    <app-available-days></app-available-days>
   `,
   /*imports: [
     ReactiveFormsModule
@@ -31,10 +34,11 @@ import {BehaviorSubject} from 'rxjs';
   styles: []
 })
 export class EditParametersComponent {
-  @Output() parameters: BehaviorSubject<ParameterI> = new BehaviorSubject(DefaultParameter)
+  @Output() parameters: Observable<ParameterI>
   formParameters: FormGroup
 
-  constructor(protected teamService: TeamService) {
+  constructor(protected parametersService: ParametersService) {
+    this.parameters = parametersService.getParameters()
     this.formParameters = new FormGroup({});
 
     this.formParameters.addControl('nbWeeksForOneSprint', new FormControl<number>(3));
@@ -49,6 +53,6 @@ export class EditParametersComponent {
       this.formParameters.controls['velocityRateForNewComer'].getRawValue(),
     )
 
-    this.parameters.next(newParameters)
+    this.parametersService.setParameters(newParameters)
   }
 }

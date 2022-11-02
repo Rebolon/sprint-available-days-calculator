@@ -1,17 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import {EditParametersComponent} from "./add-teammate.component";
 
-describe('AddTeammateComponent', () => {
-  let component: EditParametersComponent;
-  let fixture: ComponentFixture<EditParametersComponent>;
+import { ListTeamComponent } from './list-team.component';
+
+describe('ListTeamComponent', () => {
+  let component: ListTeamComponent;
+  let fixture: ComponentFixture<ListTeamComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ EditParametersComponent ]
+      declarations: [ ListTeamComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(EditParametersComponent);
+    fixture = TestBed.createComponent(ListTeamComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -9,11 +9,24 @@ import {AlertService} from "./alert.service";
         {{alert.getAlert() | async}}
       </div>
       <header class="header header-6">
-        Sprint days calculator
+        <div class="branding">
+          <a routerLink="/">
+            <span class="title">Sprint days calculator</span>
+          </a>
+        </div>
+        <div class="header-nav">
+          <a routerLink="add-teammate" class="nav-link nav-icon"><clr-icon shape="user" size="24"></clr-icon></a>
+          <a routerLink="manage-team" class="nav-link nav-icon"><clr-icon shape="calculator" size="24"></clr-icon></a>
+          <a routerLink="edit-parameters" class="nav-link nav-icon"><clr-icon shape="cog" size="24"></clr-icon></a>
+        </div>
       </header>
       <div class="content-container">
         <div class="content-area">
-          <app-create-team></app-create-team>
+          <!--div class="clr-row">
+            <div class="clr-col-12"-->
+              <router-outlet></router-outlet>
+            <!--/div>
+          </div-->
         </div>
       </div>
     </div>
