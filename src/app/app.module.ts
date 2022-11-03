@@ -13,8 +13,8 @@ import {EditParametersComponent} from './edit-parameters/edit-parameters.compone
 import {AvailableDaysComponent} from './available-days/available-days.component';
 import {ListTeamComponent} from './list-team/list-team.component';
 import {ManageTeamComponent} from './manage-team/manage-team.component';
-import { ServiceWorkerModule } from '@angular/service-worker';
-import { environment } from '../environments/environment';
+import {ServiceWorkerModule} from '@angular/service-worker';
+import {environment} from '../environments/environment';
 
 @NgModule({
   declarations: [
@@ -46,7 +46,7 @@ import { environment } from '../environments/environment';
     //CreateTeamComponent,
   ],
   providers: [
-    AlertService
+    AlertService,
   ],
   bootstrap: [AppComponent]
 })
