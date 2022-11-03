@@ -3,6 +3,7 @@ import {TeamService} from "../manage-team/team.service";
 import TeammateI from '../add-teammate/teammate';
 import {ParametersService} from '../edit-parameters/parameters.service';
 import ParameterI, {DefaultParameter} from '../edit-parameters/parameters';
+import {AlertService} from '../alert.service';
 
 @Component({
   selector: 'app-available-days',
@@ -29,7 +30,11 @@ export class AvailableDaysComponent implements OnInit {
   parameters: ParameterI = DefaultParameter;
   team: TeammateI[] = [];
 
-  constructor(protected teamService: TeamService, protected parametersService: ParametersService) {
+  constructor(
+    protected teamService: TeamService,
+    protected parametersService: ParametersService,
+    protected alertService: AlertService
+  ) {
   }
 
   ngOnInit(): void {
@@ -48,19 +53,31 @@ export class AvailableDaysComponent implements OnInit {
   }
 
   protected calcAvailableDays(): void {
+    let errors: string[] = []
     let availableDaysForTeam = 0;
 
     this.team.forEach((teammate: TeammateI) => {
-      let availableDays = teammate.getAvailableDaysInSprint(this.parameters.nbWeeksForOneSprint)
-      if (teammate.isNewComer) {
-        availableDays = availableDays - (availableDays * this.parameters.velocityRateForNewComer)
-      }
+      try {
+        let availableDays = teammate.getAvailableDaysInSprint(this.parameters.nbWeeksForOneSprint)
+        if (teammate.isNewComer) {
+          availableDays = availableDays - (availableDays * this.parameters.velocityRateForNewComer)
+        }
 
-      availableDaysForTeam += availableDays
+        availableDaysForTeam += availableDays
+      } catch (e: any) {
+        errors.push(e.message)
+      }
     })
 
-    this.availableDaysForTeam = Math.round((availableDaysForTeam - (
-      availableDaysForTeam * this.parameters.marginRate
-    )) * 100) / 100
+    if (errors.length) {
+        this.availableDaysForTeam = undefined
+        this.alertService.setAlert(
+          `Seems to be a problem in holidays of teammate and available days in a sprint: ${errors.join(', ')}`
+        )
+    } else {
+      this.availableDaysForTeam = Math.round((availableDaysForTeam - (
+        availableDaysForTeam * this.parameters.marginRate
+      )) * 100) / 100
+    }
   }
 }

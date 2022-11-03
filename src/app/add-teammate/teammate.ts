@@ -1,3 +1,5 @@
+import {TooManyHolidaysError} from './too-many-holidays-error';
+
 export default interface TeammateI {
   readonly name: string
   readonly availableDaysInAWeek: number
@@ -30,7 +32,14 @@ export class Teammate implements TeammateI {
   }
 
   getAvailableDaysInSprint(nbWeeksForOneSprint: number): number {
-    let availableDays = (this.availableDaysInAWeek * nbWeeksForOneSprint) - this.holidaysForNextSprint
+    let nbOfDaysInASprintForTeammate = this.availableDaysInAWeek * nbWeeksForOneSprint
+    let availableDays = nbOfDaysInASprintForTeammate - this.holidaysForNextSprint
+
+    if (availableDays < 0) {
+      throw new TooManyHolidaysError(`Teammate ${this.name} has too many holidays versus number of days of a sprint 
+      (${this.holidaysForNextSprint} vs ${nbOfDaysInASprintForTeammate}`)
+    }
+
     let meetingsDays = this.meetingDaysAWeek * nbWeeksForOneSprint
 
     return availableDays-meetingsDays
