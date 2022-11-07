@@ -96,9 +96,6 @@ export class AddTeammateComponent implements OnChanges {
     this.formTeammate.addControl('isNewComer', new FormControl<boolean>(
       this.editedTeammate ? this.editedTeammate.isNewComer : false
     ));
-    this.formTeammate.addControl('isNewComer', new FormControl<boolean>(
-      this.editedTeammate ? this.editedTeammate.isNewComer : false
-    ));
     /*this.formTeammate.addValidators([
       maxDaysAWeekValidator
     ])*/
