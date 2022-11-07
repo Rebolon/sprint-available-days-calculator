@@ -18,7 +18,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, { useHash: true })], // or use prerender to generate real urls (but incompatible with github pages
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
