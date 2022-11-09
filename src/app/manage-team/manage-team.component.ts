@@ -18,7 +18,7 @@ import {ParametersService} from '../edit-parameters/parameters.service';
           </span>
       </clr-alert-item>
     </clr-alert>
-    
+
     <app-available-days></app-available-days>
   `,
   /*imports: [

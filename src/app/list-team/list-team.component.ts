@@ -19,7 +19,7 @@ import {ParametersService} from '../edit-parameters/parameters.service';
         </button>
       </li>
     </ul>
-    
+
     <app-add-teammate *ngIf="editedTeammate" [editedTeammate]="editedTeammate"></app-add-teammate>
   `,
   /*imports: [
@@ -59,5 +59,4 @@ export class ListTeamComponent implements OnInit {
   protected trackByName(index: number, teammate: TeammateI): string {
     return teammate.name
   }
-
 }

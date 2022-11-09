@@ -1,28 +1,29 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
+import {FormGroup} from "@angular/forms";
 import {TeamService} from "../manage-team/team.service";
 import TeammateI, {Teammate} from "./teammate";
 import {Router} from '@angular/router';
-import {maxDaysAWeekValidator} from './max-days-a-week.validator';
-import {MaxDaysASprintValidator} from './max-days-a-sprint.validator';
+import {AddTeammateForm} from './add-teammate.form';
 
 @Component({
   selector: 'app-add-teammate',
   //standalone: true,
   template: `
     <h1>{{editedTeammate | teammateFormTitle}}</h1>
-    <form clrForm clrLayout="horizontal" [formGroup]="formTeammate" (ngSubmit)="addTeammate()">
+    <form clrForm clrLayout="horizontal" [formGroup]="formTeammate">
       <clr-input-container>
         <label for="name">Name: </label>
-        <input clrInput id="name" type="text" formControlName="name" required>    
+        <input clrInput id="name" type="text" formControlName="name" required minlength="2" />
+        <clr-control-helper>You must fill a name</clr-control-helper>
         <clr-control-error *clrIfError="'required'">This is a required field</clr-control-error>
+        <clr-control-error *clrIfError="'minlength'; error as err">Must be at least {{ err.requiredLength }} characters</clr-control-error>
       </clr-input-container>
 
       <clr-input-container>
         <label for="availableDaysInAWeek">Available days in a week: </label>
-        <input clrInput id="availableDaysInAWeek" type="number" min="0" max="7" required formControlName="availableDaysInAWeek">
+        <input clrInput id="availableDaysInAWeek" type="number" min="1" max="7" required formControlName="availableDaysInAWeek">
         <clr-control-error *clrIfError="'required'">This is a required field</clr-control-error>
-        <clr-control-error *clrIfError="'min'">Lower value is 0</clr-control-error>
+        <clr-control-error *clrIfError="'min'">Lower value is 1</clr-control-error>
         <clr-control-error *clrIfError="'max'">Higher value is 7</clr-control-error>
       </clr-input-container>
 
@@ -31,7 +32,7 @@ import {MaxDaysASprintValidator} from './max-days-a-sprint.validator';
         <input clrInput id="holidaysForNextSprint" type="number" min="0" required formControlName="holidaysForNextSprint">
         <clr-control-error *clrIfError="'required'">This is a required field</clr-control-error>
         <clr-control-error *clrIfError="'min'">Lower value is 0</clr-control-error>
-        <clr-control-error *clrIfError="'maxDaysASprint'">This fied depends on the number of days in a week, 
+        <clr-control-error *clrIfError="'maxDaysASprint'">This fied depends on the number of days in a week,
           and the number of weeks for a sprint. The value must be lower or equal to the max calculated value</clr-control-error>
       </clr-input-container>
 
@@ -50,77 +51,53 @@ import {MaxDaysASprintValidator} from './max-days-a-sprint.validator';
         </clr-checkbox-wrapper>
       </clr-checkbox-container>
 
-      <button type="submit" [disabled]="formTeammate.invalid" class="btn btn-icon btn-primary" aria-label="add" [attr.title]="getButtonText()">
+      <button (click)="addTeammate()" type="submit" class="btn btn-icon btn-primary" aria-label="add" [attr.title]="getButtonText()">
         <clr-icon [attr.shape]="getButtonIcon()"></clr-icon>
       </button>
 
-      <button *ngIf="!editedTeammate" (click)="addTeammate(true)" [disabled]="!formTeammate.valid" type="button" class="btn btn-icon btn-secondary" aria-label="add-and-go-on-manage">
+      <button *ngIf="!editedTeammate" (click)="addTeammate(true)" type="button" class="btn btn-icon btn-secondary" aria-label="add-and-go-on-manage">
         <clr-icon shape="logout"></clr-icon>
       </button>
     </form>
+<!--
+    Debug Form status: {{formTeammate.status}}<br />
+    Debug Form Field "name":
+    <ul>
+      <li>status: {{formTeammate.controls['name'].status}}</li>
+      <li>pending: {{formTeammate.controls['name'].pending}}</li>
+      <li>pristine: {{formTeammate.controls['name'].pristine}}</li>
+      <li>touched: {{formTeammate.controls['name'].touched}}</li>
+      <li>dirty: {{formTeammate.controls['name'].dirty}}</li>
+      <li>errors: {{formTeammate.controls['name'].errors | json}}</li>
+    </ul>
+    -->
   `,
   /*imports: [
     ReactiveFormsModule
   ],*/
   styles: []
 })
-export class AddTeammateComponent implements OnChanges {
+export class AddTeammateComponent implements OnInit {
   @Input() editedTeammate: TeammateI|undefined = undefined
-  formTeammate: FormGroup
+  formTeammate: FormGroup = {} as FormGroup
 
   constructor(
     protected teamService: TeamService,
-    protected maxDaysInASprintValidator: MaxDaysASprintValidator,
+    protected addTeammateFormService: AddTeammateForm,
     protected router: Router
-  ) {
-    this.formTeammate = new FormGroup({});
-    this.formTeammate.addControl('name', new FormControl<string>(
-      this.editedTeammate ? this.editedTeammate.name : '',
-      [Validators.required, Validators.minLength(2)]
-    ));
-    this.formTeammate.addControl('availableDaysInAWeek', new FormControl<number>(
-      this.editedTeammate ? this.editedTeammate.availableDaysInAWeek : 5,
-      [Validators.required, Validators.min(1), Validators.max(7)]
-    ));
-    this.formTeammate.addControl('holidaysForNextSprint', new FormControl<number>(
-      this.editedTeammate ? this.editedTeammate.holidaysForNextSprint : 0,
-      {
-        asyncValidators: [this.maxDaysInASprintValidator.validate.bind(this.maxDaysInASprintValidator)],
-        validators: [Validators.required, Validators.min(0)]
-      }
-    ));
-    this.formTeammate.addControl('meetingDaysAWeek', new FormControl<number>(
-      this.editedTeammate ? this.editedTeammate.meetingDaysAWeek : 0,
-      [Validators.required, Validators.min(0), maxDaysAWeekValidator]
-    ));
-    this.formTeammate.addControl('isNewComer', new FormControl<boolean>(
-      this.editedTeammate ? this.editedTeammate.isNewComer : false
-    ));
-    /*this.formTeammate.addValidators([
-      maxDaysAWeekValidator
-    ])*/
-    /*this.formTeammate.addAsyncValidators([
-      this.maxDaysInASprintValidator.validate.bind(this.maxDaysInASprintValidator)
-    ])*/
-  }
+  ) {}
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['editedTeammate']) {
-      if (changes['editedTeammate'].currentValue === changes['editedTeammate'].previousValue) {
-        return
-      }
-
-      this.formTeammate.controls['name'].setValue(this.editedTeammate ? this.editedTeammate.name : '');
-      this.formTeammate.controls['availableDaysInAWeek'].setValue(this.editedTeammate ? this.editedTeammate.availableDaysInAWeek : 5);
-      this.formTeammate.controls['holidaysForNextSprint'].setValue(this.editedTeammate ? this.editedTeammate.holidaysForNextSprint : 0);
-      this.formTeammate.controls['meetingDaysAWeek'].setValue(this.editedTeammate ? this.editedTeammate.meetingDaysAWeek : 0);
-      this.formTeammate.controls['isNewComer'].setValue(this.editedTeammate ? this.editedTeammate.isNewComer : false);
+  ngOnInit():void {
+    if (this.editedTeammate) {
+      this.formTeammate = this.addTeammateFormService.createEditForm(this.editedTeammate);
+    } else {
+      this.formTeammate = this.addTeammateFormService.createAddForm();
     }
   }
 
   addTeammate(redirect = false)
   {
-    if (this.formTeammate.invalid) {
+    if (!this.formTeammate.valid) {
       this.formTeammate.markAsTouched()
     } else {
       try {
@@ -137,7 +114,7 @@ export class AddTeammateComponent implements OnChanges {
         } else {
           this.teamService.addTeammate(newTeammate)
         }
-        this.formTeammate.reset();
+        this.addTeammateFormService.resetForm(this.formTeammate)
 
         if (redirect) {
           this.router.navigateByUrl('manage-team');
