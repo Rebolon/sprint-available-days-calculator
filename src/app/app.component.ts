@@ -4,15 +4,40 @@ import {TeamService} from './manage-team/team.service';
 import {ParametersService} from './edit-parameters/parameters.service';
 import TeammateI, {Teammate} from './add-teammate/teammate';
 import ParameterI, {DefaultParameter, Parameter} from './edit-parameters/parameters';
-import {preventArrowKeyScroll} from '@clr/angular/utils/focus/key-focus/util';
 
 @Component({
   selector: 'app-root',
   template: `
     <div class="main-container">
-      <div *ngIf="alert.hasAlert() | async" class="alert alert-app-level">
-        {{alert.getAlert() | async}}
-      </div>
+      <clr-alerts>
+        <clr-alert *ngIf="alert.hasAlert() | async" [clrAlertType]="'info'" [clrAlertClosable]="true">
+          <clr-alert-item>
+            <span class="alert-text">
+                {{alert.getAlert() | async}}
+            </span>
+          </clr-alert-item>
+        </clr-alert>
+
+        <clr-alert *ngIf="hasSavedData" [clrAlertClosable]="true">
+          <clr-alert-item>
+            <span class="alert-text">
+                A save has been found in your browser, do you want to restore it ? {{getSavedTeammates()}}
+            </span>
+            <div class="alert-actions">
+              <clr-dropdown>
+                <button class="dropdown-toggle" clrDropdownTrigger>
+                  Actions
+                  <cds-icon shape="angle" direction="down"></cds-icon>
+                </button>
+                <clr-dropdown-menu clrPosition="bottom-right">
+                  <a (click)="restore()" class="dropdown-item" clrDropdownItem>restore</a>
+                  <a (click)="deleteSavedData()" class="dropdown-item" clrDropdownItem>delete</a>
+                </clr-dropdown-menu>
+              </clr-dropdown>
+            </div>
+          </clr-alert-item>
+        </clr-alert>
+      </clr-alerts>
       <header class="header header-6">
         <div class="branding">
           <a routerLink="/">
@@ -24,9 +49,9 @@ import {preventArrowKeyScroll} from '@clr/angular/utils/focus/key-focus/util';
           <a routerLink="manage-team" class="nav-link nav-icon"><clr-icon shape="calculator" size="24"></clr-icon></a>
           <a routerLink="edit-parameters" class="nav-link nav-icon"><clr-icon shape="cog" size="24"></clr-icon></a>
           <a (click)="save()" [attr.disabled]="team.length ? 'disabled' : ''" class="nav-link nav-icon a-hover"><clr-icon shape="floppy" size="24"></clr-icon></a>
-          <a (click)="restore()" *ngIf="hasSavedData" class="nav-link nav-icon a-hover"><clr-icon shape="backup-restore" size="24"></clr-icon></a>
         </div>
       </header>
+
       <div class="content-container">
         <div class="content-area">
           <!--div class="clr-row">
@@ -69,6 +94,15 @@ export class AppComponent implements OnInit {
     this.alert.setAlert('Save done')
   }
 
+  protected deleteSavedData()
+  {
+    localStorage.removeItem('team');
+    localStorage.removeItem('parameters');
+
+    this.hasSavedData = false
+    this.alert.setAlert('delete done')
+  }
+
   protected restore()
   {
     const team: TeammateI[] = localStorage.getItem('team') ? JSON.parse(localStorage.getItem('team') as string) : []
@@ -94,11 +128,11 @@ export class AppComponent implements OnInit {
   protected checkStorage()
   {
    if (localStorage.getItem('team') && localStorage.getItem('parameters')) {
-     const teammatesName = this.team.map((teammate: TeammateI): string => teammate.name).join(', ')
-     this.alert.setAlert(`A save has been found in your browser, do you want to restore it ?
-      ${teammatesName}
-     `)
      this.hasSavedData = true
-   } 
+   }
+  }
+
+  protected getSavedTeammates(): string {
+    return this.team.map((teammate: TeammateI): string => teammate.name).join(', ')
   }
 }
