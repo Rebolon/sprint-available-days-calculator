@@ -1,9 +1,9 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {FormGroup} from "@angular/forms";
+import {Component, Input, OnInit, SimpleChanges} from '@angular/core';
 import {TeamService} from "../manage-team/team.service";
 import TeammateI, {Teammate} from "./teammate";
 import {Router} from '@angular/router';
-import {AddTeammateForm} from './add-teammate.form';
+import {TeammateForm} from './teammate.form';
+import {MaxDaysASprintValidator} from './max-days-a-sprint.validator';
 
 @Component({
   selector: 'app-add-teammate',
@@ -59,7 +59,7 @@ import {AddTeammateForm} from './add-teammate.form';
         <clr-icon shape="logout"></clr-icon>
       </button>
     </form>
-<!--
+    <!-- -->
     Debug Form status: {{formTeammate.status}}<br />
     Debug Form Field "name":
     <ul>
@@ -70,7 +70,7 @@ import {AddTeammateForm} from './add-teammate.form';
       <li>dirty: {{formTeammate.controls['name'].dirty}}</li>
       <li>errors: {{formTeammate.controls['name'].errors | json}}</li>
     </ul>
-    -->
+    <!-- -->
   `,
   /*imports: [
     ReactiveFormsModule
@@ -79,19 +79,29 @@ import {AddTeammateForm} from './add-teammate.form';
 })
 export class AddTeammateComponent implements OnInit {
   @Input() editedTeammate: TeammateI|undefined = undefined
-  formTeammate: FormGroup = {} as FormGroup
+  protected formTeammate: TeammateForm = {} as TeammateForm
 
   constructor(
     protected teamService: TeamService,
-    protected addTeammateFormService: AddTeammateForm,
+    protected maxDaysInASprintValidator: MaxDaysASprintValidator,
     protected router: Router
   ) {}
 
   ngOnInit():void {
     if (this.editedTeammate) {
-      this.formTeammate = this.addTeammateFormService.createEditForm(this.editedTeammate);
+      this.formTeammate = new TeammateForm(this.editedTeammate, this.maxDaysInASprintValidator);
     } else {
-      this.formTeammate = this.addTeammateFormService.createAddForm();
+      this.formTeammate = new TeammateForm(new Teammate(), this.maxDaysInASprintValidator);
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['editedTeammate']) {
+      if (changes['editedTeammate'].currentValue === changes['editedTeammate'].previousValue) {
+        return
+      }
+
+      this.formTeammate = new TeammateForm(changes['editedTeammate'].currentValue, this.maxDaysInASprintValidator);
     }
   }
 
@@ -102,10 +112,10 @@ export class AddTeammateComponent implements OnInit {
     } else {
       try {
         const newTeammate = new Teammate(
-          this.formTeammate.value.name ?? '',
-          this.formTeammate.value.availableDaysInAWeek ?? 5,
-          this.formTeammate.value.holidaysForNextSprint ?? 0,
-          this.formTeammate.value.meetingDaysAWeek ?? 0,
+          this.formTeammate.value.name,
+          this.formTeammate.value.availableDaysInAWeek,
+          this.formTeammate.value.holidaysForNextSprint,
+          this.formTeammate.value.meetingDaysAWeek,
           !!this.formTeammate.value.isNewComer
         )
 
@@ -114,7 +124,7 @@ export class AddTeammateComponent implements OnInit {
         } else {
           this.teamService.addTeammate(newTeammate)
         }
-        this.addTeammateFormService.resetForm(this.formTeammate)
+        this.formTeammate.reset(new Teammate())
 
         if (redirect) {
           this.router.navigateByUrl('manage-team');

@@ -3,7 +3,7 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
 import ParameterI, {DefaultParameter, Parameter} from './parameters';
 import {Observable} from 'rxjs';
 import {ParametersService} from './parameters.service';
-import {EditParametersForm} from './edit-parameters.form';
+import {ParametersForm} from './parameters.form';
 
 @Component({
   selector: 'app-edit-parameters',
@@ -47,19 +47,18 @@ import {EditParametersForm} from './edit-parameters.form';
 })
 export class EditParametersComponent {
   @Output() parameters: Observable<ParameterI>
-  formParameters: FormGroup = {} as FormGroup
+  protected formParameters: ParametersForm = {} as ParametersForm
 
-  constructor(protected parametersService: ParametersService, protected editParametersFormService: EditParametersForm) {
+  constructor(protected parametersService: ParametersService) {
     this.parameters = parametersService.getParameters()
 
-    this.formParameters = this.editParametersFormService.createForm(DefaultParameter)
+    this.formParameters = new ParametersForm(DefaultParameter)
 
     parametersService.getParameters().subscribe({
       next: (parameters: ParameterI) => {
-        this.formParameters = this.editParametersFormService.createForm(parameters)
+        this.formParameters = new ParametersForm(parameters)
       }
     })
-
   }
 
   updateParameters(): void {
