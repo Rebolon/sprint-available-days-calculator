@@ -6,7 +6,6 @@ export default interface TeammateI {
   readonly holidaysForNextSprint: number
   readonly meetingDaysAWeek: number
   readonly isNewComer: boolean
-
   getAvailableDaysInSprint(nbWeeksForOneSprint: number): number
 }
 
@@ -18,7 +17,7 @@ export class Teammate implements TeammateI {
   readonly isNewComer: boolean;
 
   constructor (
-    name: string,
+    name: string = '',
     availableDaysInWeek = 5,
     holidaysForNextSprint = 0,
     meetingDaysAWeek = 0,
@@ -36,7 +35,7 @@ export class Teammate implements TeammateI {
     let availableDays = nbOfDaysInASprintForTeammate - this.holidaysForNextSprint
 
     if (availableDays < 0) {
-      throw new TooManyHolidaysError(`Teammate ${this.name} has too many holidays versus number of days of a sprint 
+      throw new TooManyHolidaysError(`Teammate ${this.name} has too many holidays versus number of days of a sprint
       (${this.holidaysForNextSprint} vs ${nbOfDaysInASprintForTeammate}`)
     }
 

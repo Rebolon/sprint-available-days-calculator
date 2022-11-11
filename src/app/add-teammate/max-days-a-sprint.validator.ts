@@ -2,7 +2,7 @@ import {AbstractControl, AsyncValidator, ValidationErrors} from '@angular/forms'
 import {Injectable} from '@angular/core';
 import {ParametersService} from '../edit-parameters/parameters.service';
 import ParameterI from '../edit-parameters/parameters';
-import {map, Observable} from 'rxjs';
+import {delay, map, Observable} from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class MaxDaysASprintValidator implements AsyncValidator {
@@ -16,6 +16,7 @@ export class MaxDaysASprintValidator implements AsyncValidator {
 
     return this.parametersService.getParameters().pipe(
       map((parameters: ParameterI) => {
+        debugger
         if (availableDaysInAWeek
           && holidaysForNextSprint
           && availableDaysInAWeek.value * parameters.nbWeeksForOneSprint >= holidaysForNextSprint.value) {
@@ -23,7 +24,8 @@ export class MaxDaysASprintValidator implements AsyncValidator {
         }
 
         return null
-      })
+      }),
+      delay(500),
     )
   }
 }
