@@ -10,7 +10,7 @@ import {MaxDaysASprintValidator} from './max-days-a-sprint.validator';
   //standalone: true,
   template: `
     <h1>{{editedTeammate | teammateFormTitle}}</h1>
-    <form clrForm clrLayout="horizontal" [formGroup]="formTeammate">
+    <form clrForm clrLayout="horizontal" [formGroup]="formTeammate" (submit)="addTeammate()">
       <clr-input-container>
         <label for="name">Name: </label>
         <input clrInput id="name" type="text" formControlName="name" required minlength="2" />
@@ -51,7 +51,7 @@ import {MaxDaysASprintValidator} from './max-days-a-sprint.validator';
         </clr-checkbox-wrapper>
       </clr-checkbox-container>
 
-      <button (click)="addTeammate()" type="submit" class="btn btn-icon btn-primary" aria-label="add" [attr.title]="getButtonText()">
+      <button type="submit" class="btn btn-icon btn-primary" aria-label="add" [attr.title]="getButtonText()">
         <clr-icon [attr.shape]="getButtonIcon()"></clr-icon>
       </button>
 
