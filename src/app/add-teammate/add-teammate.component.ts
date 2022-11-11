@@ -59,7 +59,7 @@ import {MaxDaysASprintValidator} from './max-days-a-sprint.validator';
         <clr-icon shape="logout"></clr-icon>
       </button>
     </form>
-    <!-- -->
+    <!-- -- >
     Debug Form status: {{formTeammate.status}}<br />
     Debug Form Field "name":
     <ul>
@@ -70,7 +70,7 @@ import {MaxDaysASprintValidator} from './max-days-a-sprint.validator';
       <li>dirty: {{formTeammate.controls['name'].dirty}}</li>
       <li>errors: {{formTeammate.controls['name'].errors | json}}</li>
     </ul>
-    <!-- -->
+    < !-- -->
   `,
   /*imports: [
     ReactiveFormsModule
