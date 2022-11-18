@@ -40,10 +40,10 @@ export class TeammateForm extends FormGroup {
         'isNewComer': new FormControl<boolean>(
           teammate?.isNewComer
         ),
-      },
+      }/*,
       {
         updateOn: "blur"
-      }
+      }*/
     ).controls)
   }
 }

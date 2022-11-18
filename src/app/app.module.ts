@@ -15,6 +15,7 @@ import {ListTeamComponent} from './list-team/list-team.component';
 import {ManageTeamComponent} from './manage-team/manage-team.component';
 import {ServiceWorkerModule} from '@angular/service-worker';
 import {environment} from '../environments/environment';
+import { ToFixedPipe } from './to-fixed.pipe';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import {environment} from '../environments/environment';
     EditParametersComponent,
     AvailableDaysComponent,
     TeammateFormTitlePipe,
+    ToFixedPipe,
   ],
   imports: [
     BrowserModule,

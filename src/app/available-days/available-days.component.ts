@@ -14,7 +14,7 @@ import {AlertService} from '../alert.service';
                  [clrAlertClosable]="false">
         <clr-alert-item>
           <span class="alert-text">
-              {{availableDaysForTeam}} days available for the sprint.
+              {{availableDaysForTeam | toFixed: 2}} days available for the sprint.
           </span>
         </clr-alert-item>
       </clr-alert>

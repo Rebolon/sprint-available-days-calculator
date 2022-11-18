@@ -12,7 +12,7 @@ import {ParametersService} from '../edit-parameters/parameters.service';
     <h1 *ngIf="team.length > 0">List of teammates</h1>
     <ul>
       <li *ngFor="let teammate of team; trackBy: trackByName">
-        {{teammate.name}}: {{teammate.getAvailableDaysInSprint(parameters.nbWeeksForOneSprint)}} days available
+        {{teammate.name}}: {{teammate.getAvailableDaysInSprint(parameters.nbWeeksForOneSprint) | toFixed:2}} days available
         <button *ngIf="!editedTeammate || editedTeammate !== teammate" (click)="editTeammate(teammate)"
                 class="btn btn-icon" aria-label="edit">
           <clr-icon shape="edit"></clr-icon>
