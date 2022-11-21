@@ -1,11 +1,18 @@
-import {Component, OnInit} from '@angular/core';
-import {AlertService} from "./alert.service";
-import {TeamService} from './manage-team/team.service';
-import {ParametersService} from './edit-parameters/parameters.service';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { AlertService } from "./alert.service";
+import { TeamService } from './manage-team/team.service';
+import { ParametersService } from './edit-parameters/parameters.service';
 import TeammateI, {Teammate} from './add-teammate/teammate';
 import ParameterI, {DefaultParameter, Parameter} from './edit-parameters/parameters';
+import {ClrAlertModule, ClrDropdownModule} from '@clr/angular';
+
 
 @Component({
+  standalone: true,
+  imports: [CommonModule, RouterModule, ClrAlertModule, ClrDropdownModule],
+  providers: [TeamService, ParametersService, AlertService],
   selector: 'app-root',
   template: `
     <div class="main-container">

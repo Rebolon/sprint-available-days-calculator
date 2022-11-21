@@ -1,13 +1,17 @@
 import {Component, OnInit} from '@angular/core';
 import {TeamService} from "../manage-team/team.service";
 import TeammateI from "../add-teammate/teammate";
-import {of, switchMap} from "rxjs";
 import ParameterI, {DefaultParameter} from '../edit-parameters/parameters';
 import {ParametersService} from '../edit-parameters/parameters.service';
+import {ToFixedPipe} from '../to-fixed.pipe';
+import {ClrIconModule} from '@clr/angular';
+import {AddTeammateComponent} from '../add-teammate/add-teammate.component';
+import {CommonModule} from '@angular/common';
 
 @Component({
   selector: 'app-list-team',
-  // standalone: true,
+  standalone: true,
+  imports: [CommonModule, ClrIconModule, ToFixedPipe, AddTeammateComponent],
   template: `
     <h1 *ngIf="team.length > 0">List of teammates</h1>
     <ul>
@@ -22,12 +26,6 @@ import {ParametersService} from '../edit-parameters/parameters.service';
 
     <app-add-teammate *ngIf="editedTeammate" [editedTeammate]="editedTeammate"></app-add-teammate>
   `,
-  /*imports: [
-    ReactiveFormsModule,
-    AddTeammateComponent,
-    AsyncPipe,
-    NgForOf
-  ],*/
   styles: []
 })
 export class ListTeamComponent implements OnInit {
