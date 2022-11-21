@@ -4,10 +4,14 @@ import TeammateI from '../add-teammate/teammate';
 import {ParametersService} from '../edit-parameters/parameters.service';
 import ParameterI, {DefaultParameter} from '../edit-parameters/parameters';
 import {AlertService} from '../alert.service';
+import {ClrAlertModule} from '@clr/angular';
+import {ToFixedPipe} from '../to-fixed.pipe';
+import {CommonModule} from '@angular/common';
 
 @Component({
   selector: 'app-available-days',
-  //standalone: true,
+  standalone: true,
+  imports: [CommonModule, ClrAlertModule, ToFixedPipe],
   template: `
     <ng-container>
       <clr-alert *ngIf="team.length > 0" [clrAlertType]="'info'"
@@ -20,9 +24,6 @@ import {AlertService} from '../alert.service';
       </clr-alert>
     </ng-container>
   `,
-  /*imports: [
-    ReactiveFormsModule
-  ],*/
   styles: []
 })
 export class AvailableDaysComponent implements OnInit {

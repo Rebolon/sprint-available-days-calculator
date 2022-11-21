@@ -2,7 +2,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 import TeammateI from '../add-teammate/teammate';
 
 @Pipe({
-  name: 'teammateFormTitle'
+  name: 'teammateFormTitle',
+  standalone: true,
 })
 export class TeammateFormTitlePipe implements PipeTransform {
 

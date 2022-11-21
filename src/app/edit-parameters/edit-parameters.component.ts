@@ -1,13 +1,16 @@
 import {Component, Output} from '@angular/core';
-import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {ReactiveFormsModule} from "@angular/forms";
 import ParameterI, {DefaultParameter, Parameter} from './parameters';
 import {Observable} from 'rxjs';
 import {ParametersService} from './parameters.service';
 import {ParametersForm} from './parameters.form';
+import {ClrFormsModule} from '@clr/angular';
+import {AvailableDaysComponent} from '../available-days/available-days.component';
 
 @Component({
   selector: 'app-edit-parameters',
-  //standalone: true,
+  standalone: true,
+  imports: [ClrFormsModule, ReactiveFormsModule, AvailableDaysComponent],
   template: `
     <h1>Adapt parameters</h1>
     <form clrForm clrLayout="horizontal" [formGroup]="formParameters">
@@ -40,9 +43,6 @@ import {ParametersForm} from './parameters.form';
 
     <app-available-days></app-available-days>
   `,
-  /*imports: [
-    ReactiveFormsModule
-  ],*/
   styles: []
 })
 export class EditParametersComponent {

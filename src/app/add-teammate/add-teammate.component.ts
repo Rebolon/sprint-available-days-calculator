@@ -1,13 +1,18 @@
 import {Component, Input, OnInit, SimpleChanges} from '@angular/core';
 import {TeamService} from "../manage-team/team.service";
 import TeammateI, {Teammate} from "./teammate";
-import {Router} from '@angular/router';
+import {Router, RouterModule} from '@angular/router';
 import {TeammateForm} from './teammate.form';
 import {MaxDaysASprintValidator} from './max-days-a-sprint.validator';
+import {TeammateFormTitlePipe} from '../manage-team/teammate-form-title.pipe';
+import {ReactiveFormsModule} from '@angular/forms';
+import {ClrFormsModule, ClrIconModule} from '@clr/angular';
+import {CommonModule} from '@angular/common';
 
 @Component({
   selector: 'app-add-teammate',
-  //standalone: true,
+  standalone: true,
+  imports: [CommonModule, RouterModule, ReactiveFormsModule, ClrFormsModule, ClrIconModule, TeammateFormTitlePipe],
   template: `
     <h1>{{editedTeammate | teammateFormTitle}}</h1>
     <form clrForm clrLayout="horizontal" [formGroup]="formTeammate" (submit)="addTeammate()">
@@ -72,9 +77,6 @@ import {MaxDaysASprintValidator} from './max-days-a-sprint.validator';
     </ul>
     < !-- -->
   `,
-  /*imports: [
-    ReactiveFormsModule
-  ],*/
   styles: []
 })
 export class AddTeammateComponent implements OnInit {
