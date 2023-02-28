@@ -6,16 +6,21 @@ import {TeammateForm} from './teammate.form';
 import {MaxDaysASprintValidator} from './max-days-a-sprint.validator';
 import {TeammateFormTitlePipe} from '../manage-team/teammate-form-title.pipe';
 import {ReactiveFormsModule} from '@angular/forms';
-import {ClrFormsModule, ClrIconModule} from '@clr/angular';
+import {ClrFormsModule} from '@clr/angular';
 import {CommonModule} from '@angular/common';
+import '@cds/core/icon/register.js';
+import { ClarityIcons, logoutIcon, noteIcon, newIcon } from '@cds/core/icon';
+import { CdsIconModule } from '@cds/angular/icon';
+
+ClarityIcons.addIcons(logoutIcon, noteIcon, newIcon);
 
 @Component({
   selector: 'app-add-teammate',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule, ClrFormsModule, ClrIconModule, TeammateFormTitlePipe],
+  imports: [CommonModule, CdsIconModule, RouterModule, ReactiveFormsModule, ClrFormsModule, TeammateFormTitlePipe],
   template: `
     <h1>{{editedTeammate | teammateFormTitle}}</h1>
-    <form clrForm clrLayout="horizontal" [formGroup]="formTeammate" (submit)="addTeammate()">
+    <form clrForm clrLayout="horizontal" [formGroup]="formTeammate" (ngSubmit)="addTeammate($event.submitter.name)">
       <clr-input-container>
         <label for="name">Name: </label>
         <input clrInput id="name" type="text" formControlName="name" required minlength="2" />
@@ -56,26 +61,19 @@ import {CommonModule} from '@angular/common';
         </clr-checkbox-wrapper>
       </clr-checkbox-container>
 
-      <button type="submit" class="btn btn-icon btn-primary" aria-label="add" [attr.title]="getButtonText()">
-        <clr-icon [attr.shape]="getButtonIcon()"></clr-icon>
-      </button>
-
-      <button *ngIf="!editedTeammate" (click)="addTeammate(true)" type="button" class="btn btn-icon btn-secondary" aria-label="add-and-go-on-manage">
-        <clr-icon shape="logout"></clr-icon>
-      </button>
+      <div class="clr-row">
+        <div class="clr-col-2">
+          <button name="saveAndRefresh" type="submit" class="btn btn-icon btn-primary btn-block" aria-label="save and add a new teammate" [attr.title]="getButtonText()" [disabled]="formTeammate.invalid">
+            <cds-icon [attr.shape]="getButtonIcon()"></cds-icon>
+          </button>
+        </div>
+        <div class="clr-col-2">
+          <button *ngIf="!editedTeammate" name="saveAndRedirect" type="submit" class="btn btn-icon btn-secondary btn-block" aria-label="save and redirect to list teammate" title="save and redirect to list teammate" [disabled]="formTeammate.invalid">
+            <cds-icon shape="logout"></cds-icon>
+          </button>
+        </div>
+      </div>
     </form>
-    <!-- -- >
-    Debug Form status: {{formTeammate.status}}<br />
-    Debug Form Field "name":
-    <ul>
-      <li>status: {{formTeammate.controls['name'].status}}</li>
-      <li>pending: {{formTeammate.controls['name'].pending}}</li>
-      <li>pristine: {{formTeammate.controls['name'].pristine}}</li>
-      <li>touched: {{formTeammate.controls['name'].touched}}</li>
-      <li>dirty: {{formTeammate.controls['name'].dirty}}</li>
-      <li>errors: {{formTeammate.controls['name'].errors | json}}</li>
-    </ul>
-    < !-- -->
   `,
   styles: []
 })
@@ -107,11 +105,11 @@ export class AddTeammateComponent implements OnInit {
     }
   }
 
-  addTeammate(redirect = false)
+  addTeammate(event: string)
   {
-    if (!this.formTeammate.valid) {
-      this.formTeammate.markAsTouched()
-    } else {
+    let redirect = event === "saveAndRedirect" ? true : false;
+    
+    if (this.formTeammate.valid) {
       try {
         const newTeammate = new Teammate(
           this.formTeammate.value.name,
