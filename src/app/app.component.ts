@@ -7,11 +7,15 @@ import { ParametersService } from './edit-parameters/parameters.service';
 import TeammateI, {Teammate} from './add-teammate/teammate';
 import ParameterI, {DefaultParameter, Parameter} from './edit-parameters/parameters';
 import {ClrAlertModule, ClrDropdownModule} from '@clr/angular';
+import { ClarityIcons, angleIcon, userIcon, cogIcon, calculatorIcon, floppyIcon } from '@cds/core/icon';
+import { CdsIconModule } from '@cds/angular';
+
+ClarityIcons.addIcons(angleIcon, userIcon, cogIcon, calculatorIcon, floppyIcon);
 
 
 @Component({
   standalone: true,
-  imports: [CommonModule, RouterModule, ClrAlertModule, ClrDropdownModule],
+  imports: [CommonModule, RouterModule, CdsIconModule, ClrAlertModule, ClrDropdownModule],
   providers: [TeamService, ParametersService, AlertService],
   selector: 'app-root',
   template: `
@@ -52,10 +56,10 @@ import {ClrAlertModule, ClrDropdownModule} from '@clr/angular';
           </a>
         </div>
         <div class="header-nav">
-          <a routerLink="manage-team" class="nav-link nav-icon"><clr-icon shape="calculator" size="24"></clr-icon></a>
-          <a routerLink="add-teammate" class="nav-link nav-icon"><clr-icon shape="user" size="24"></clr-icon></a>
-          <a routerLink="edit-parameters" class="nav-link nav-icon"><clr-icon shape="cog" size="24"></clr-icon></a>
-          <a (click)="save()" [attr.disabled]="team.length ? 'disabled' : ''" class="nav-link nav-icon a-hover"><clr-icon shape="floppy" size="24"></clr-icon></a>
+          <a routerLink="manage-team" class="nav-link nav-icon"><cds-icon shape="calculator" size="24"></cds-icon></a>
+          <a routerLink="add-teammate" class="nav-link nav-icon"><cds-icon shape="user" size="24"></cds-icon></a>
+          <a routerLink="edit-parameters" class="nav-link nav-icon"><cds-icon shape="cog" size="24"></cds-icon></a>
+          <a (click)="save()" [attr.disabled]="team.length ? 'disabled' : ''" class="nav-link nav-icon a-hover"><cds-icon shape="floppy" size="24"></cds-icon></a>
         </div>
       </header>
 

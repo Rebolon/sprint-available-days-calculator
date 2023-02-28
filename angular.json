@@ -31,12 +31,10 @@
               "src/manifest.webmanifest"
             ],
             "styles": [
-              "node_modules/@clr/icons/clr-icons.min.css",
               "node_modules/@clr/ui/clr-ui.min.css",
               "src/styles.scss"
             ],
             "scripts": [
-              "node_modules/@clr/icons/clr-icons.min.js"
             ],
             "serviceWorker": true,
             "ngswConfigPath": "ngsw-config.json"
@@ -128,5 +126,13 @@
     "schematicCollections": [
       "@angular-eslint/schematics"
     ]
+  },
+  "schematics": {
+    "@angular-eslint/schematics:application": {
+      "setParserOptionsProject": true
+    },
+    "@angular-eslint/schematics:library": {
+      "setParserOptionsProject": true
+    }
   }
 }

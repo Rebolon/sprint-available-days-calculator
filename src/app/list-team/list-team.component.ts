@@ -4,22 +4,25 @@ import TeammateI from "../add-teammate/teammate";
 import ParameterI, {DefaultParameter} from '../edit-parameters/parameters';
 import {ParametersService} from '../edit-parameters/parameters.service';
 import {ToFixedPipe} from '../to-fixed.pipe';
-import {ClrIconModule} from '@clr/angular';
 import {AddTeammateComponent} from '../add-teammate/add-teammate.component';
 import {CommonModule} from '@angular/common';
+import { ClarityIcons, pencilIcon } from '@cds/core/icon';
+import { CdsIconModule } from '@cds/angular';
+
+ClarityIcons.addIcons(pencilIcon);
 
 @Component({
   selector: 'app-list-team',
   standalone: true,
-  imports: [CommonModule, ClrIconModule, ToFixedPipe, AddTeammateComponent],
+  imports: [CommonModule, CdsIconModule,  ToFixedPipe, AddTeammateComponent],
   template: `
     <h1 *ngIf="team.length > 0">List of teammates</h1>
     <ul>
       <li *ngFor="let teammate of team; trackBy: trackByName">
         {{teammate.name}}: {{teammate.getAvailableDaysInSprint(parameters.nbWeeksForOneSprint) | toFixed:2}} days available
         <button *ngIf="!editedTeammate || editedTeammate !== teammate" (click)="editTeammate(teammate)"
-                class="btn btn-icon" aria-label="edit">
-          <clr-icon shape="edit"></clr-icon>
+                class="btn btn-link" aria-label="edit">
+          <cds-icon shape="pencil"></cds-icon>
         </button>
       </li>
     </ul>
