@@ -7,6 +7,9 @@ import {ToFixedPipe} from '../to-fixed.pipe';
 import {ClrIconModule} from '@clr/angular';
 import {AddTeammateComponent} from '../add-teammate/add-teammate.component';
 import {CommonModule} from '@angular/common';
+import { ClarityIcons, pencilIcon } from '@cds/core/icon';
+
+ClarityIcons.addIcons(pencilIcon);
 
 @Component({
   selector: 'app-list-team',
@@ -16,11 +19,10 @@ import {CommonModule} from '@angular/common';
     <h1 *ngIf="team.length > 0">List of teammates</h1>
     <ul>
       <li *ngFor="let teammate of team; trackBy: trackByName">
-        {{teammate.name}}: {{teammate.getAvailableDaysInSprint(parameters.nbWeeksForOneSprint) | toFixed:2}} days available
-        <button *ngIf="!editedTeammate || editedTeammate !== teammate" (click)="editTeammate(teammate)"
-                class="btn btn-icon" aria-label="edit">
-          <clr-icon shape="edit"></clr-icon>
-        </button>
+      <button *ngIf="!editedTeammate || editedTeammate !== teammate" (click)="editTeammate(teammate)" class="btn btn-icon" aria-label="edit">
+        <cds-icon shape="pencil"></cds-icon>
+      </button> 
+      {{teammate.name}}: {{teammate.getAvailableDaysInSprint(parameters.nbWeeksForOneSprint) | toFixed:2}} days available  
       </li>
     </ul>
 

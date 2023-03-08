@@ -8,6 +8,10 @@ import TeammateI, {Teammate} from './add-teammate/teammate';
 import ParameterI, {DefaultParameter, Parameter} from './edit-parameters/parameters';
 import {ClrAlertModule, ClrDropdownModule} from '@clr/angular';
 
+import '@cds/core/icon/register.js';
+import { ClarityIcons, userIcon, calculatorIcon, cogIcon, floppyIcon } from '@cds/core/icon';
+
+ClarityIcons.addIcons(userIcon, calculatorIcon, cogIcon, floppyIcon);
 
 @Component({
   standalone: true,
@@ -52,10 +56,10 @@ import {ClrAlertModule, ClrDropdownModule} from '@clr/angular';
           </a>
         </div>
         <div class="header-nav">
-          <a routerLink="manage-team" class="nav-link nav-icon"><clr-icon shape="calculator" size="24"></clr-icon></a>
-          <a routerLink="add-teammate" class="nav-link nav-icon"><clr-icon shape="user" size="24"></clr-icon></a>
-          <a routerLink="edit-parameters" class="nav-link nav-icon"><clr-icon shape="cog" size="24"></clr-icon></a>
-          <a (click)="save()" [attr.disabled]="team.length ? 'disabled' : ''" class="nav-link nav-icon a-hover"><clr-icon shape="floppy" size="24"></clr-icon></a>
+          <a routerLink="manage-team" class="nav-link nav-icon"><cds-icon shape="calculator" size="24"></cds-icon></a>
+          <a routerLink="add-teammate" class="nav-link nav-icon"><cds-icon shape="user" size="24"></cds-icon></a>
+          <a routerLink="edit-parameters" class="nav-link nav-icon"><cds-icon shape="cog" size="24"></cds-icon></a>
+          <a (click)="save()" [attr.disabled]="team.length ? 'disabled' : ''" class="nav-link nav-icon a-hover"><cds-icon shape="floppy" size="24"></cds-icon></a>
         </div>
       </header>
 

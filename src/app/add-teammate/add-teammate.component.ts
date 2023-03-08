@@ -9,6 +9,11 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {ClrFormsModule, ClrIconModule} from '@clr/angular';
 import {CommonModule} from '@angular/common';
 
+import '@cds/core/icon/register.js';
+import { ClarityIcons, logoutIcon, noteIcon, newIcon } from '@cds/core/icon';
+
+ClarityIcons.addIcons(logoutIcon, noteIcon, newIcon);
+
 @Component({
   selector: 'app-add-teammate',
   standalone: true,
@@ -26,7 +31,7 @@ import {CommonModule} from '@angular/common';
 
       <clr-input-container>
         <label for="availableDaysInAWeek">Available days in a week: </label>
-        <input clrInput id="availableDaysInAWeek" type="number" min="1" max="7" required formControlName="availableDaysInAWeek">
+        <input clrInput id="availableDaysInAWeek" type="number" min="1" max="7" step="0.5" required formControlName="availableDaysInAWeek">
         <clr-control-error *clrIfError="'required'">This is a required field</clr-control-error>
         <clr-control-error *clrIfError="'min'">Lower value is 1</clr-control-error>
         <clr-control-error *clrIfError="'max'">Higher value is 7</clr-control-error>
@@ -34,7 +39,7 @@ import {CommonModule} from '@angular/common';
 
       <clr-input-container>
         <label for="holidaysForNextSprint">Holidays for next sprint: </label>
-        <input clrInput id="holidaysForNextSprint" type="number" min="0" required formControlName="holidaysForNextSprint">
+        <input clrInput id="holidaysForNextSprint" type="number" min="0" step="0.5" required formControlName="holidaysForNextSprint">
         <clr-control-error *clrIfError="'required'">This is a required field</clr-control-error>
         <clr-control-error *clrIfError="'min'">Lower value is 0</clr-control-error>
         <clr-control-error *clrIfError="'maxDaysASprint'">This fied depends on the number of days in a week,
@@ -57,25 +62,13 @@ import {CommonModule} from '@angular/common';
       </clr-checkbox-container>
 
       <button type="submit" class="btn btn-icon btn-primary" aria-label="add" [attr.title]="getButtonText()">
-        <clr-icon [attr.shape]="getButtonIcon()"></clr-icon>
+        <cds-icon [attr.shape]="getButtonIcon()"></cds-icon>
       </button>
 
       <button *ngIf="!editedTeammate" (click)="addTeammate(true)" type="button" class="btn btn-icon btn-secondary" aria-label="add-and-go-on-manage">
-        <clr-icon shape="logout"></clr-icon>
+        <cds-icon shape="logout"></cds-icon>
       </button>
     </form>
-    <!-- -- >
-    Debug Form status: {{formTeammate.status}}<br />
-    Debug Form Field "name":
-    <ul>
-      <li>status: {{formTeammate.controls['name'].status}}</li>
-      <li>pending: {{formTeammate.controls['name'].pending}}</li>
-      <li>pristine: {{formTeammate.controls['name'].pristine}}</li>
-      <li>touched: {{formTeammate.controls['name'].touched}}</li>
-      <li>dirty: {{formTeammate.controls['name'].dirty}}</li>
-      <li>errors: {{formTeammate.controls['name'].errors | json}}</li>
-    </ul>
-    < !-- -->
   `,
   styles: []
 })
