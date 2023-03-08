@@ -20,17 +20,12 @@ ClarityIcons.addIcons(pencilIcon);
     <h1 *ngIf="team.length > 0">List of teammates</h1>
     <ul>
       <li *ngFor="let teammate of team; trackBy: trackByName">
-        {{teammate.name}}: {{teammate.getAvailableDaysInSprint(parameters.nbWeeksForOneSprint) | toFixed:2}} days available
-        <button *ngIf="!editedTeammate || editedTeammate !== teammate" (click)="editTeammate(teammate)"
+        <button (click)="editTeammate(teammate)"
+                [disabled]="editedTeammate && editedTeammate === teammate"
                 class="btn btn-link" aria-label="edit">
           <cds-icon shape="pencil"></cds-icon>
         </button>
-        {{ teammate.name }}:
-        {{
-          teammate.getAvailableDaysInSprint(parameters.nbWeeksForOneSprint)
-            | toFixed: 2
-        }}
-        days available
+        {{teammate.name}}: {{teammate.getAvailableDaysInSprint(parameters.nbWeeksForOneSprint) | toFixed:2}} days available
       </li>
     </ul>
 
