@@ -68,10 +68,10 @@ ClarityIcons.addIcons(angleIcon, userIcon, cogIcon, calculatorIcon, floppyIcon);
           </a>
         </div>
         <div class="header-nav">
-          <a routerLink="manage-team" class="nav-link nav-icon"><cds-icon shape="calculator" size="24"></cds-icon></a>
-          <a routerLink="add-teammate" class="nav-link nav-icon"><cds-icon shape="user" size="24"></cds-icon></a>
-          <a routerLink="edit-parameters" class="nav-link nav-icon"><cds-icon shape="cog" size="24"></cds-icon></a>
-          <a (click)="save()" [attr.disabled]="team.length ? 'disabled' : ''" class="nav-link nav-icon a-hover"><cds-icon shape="floppy" size="24"></cds-icon></a>
+          <a routerLink="manage-team" class="nav-link nav-icon" routerLinkActive="active" title="List of teammates"><cds-icon shape="calculator" size="24"></cds-icon></a>
+          <a routerLink="add-teammate" class="nav-link nav-icon" routerLinkActive="active" title="Add new teammate"><cds-icon shape="user" size="24"></cds-icon></a>
+          <a routerLink="edit-parameters" class="nav-link nav-icon" routerLinkActive="active" title="Adapt parameters"><cds-icon shape="cog" size="24"></cds-icon></a>
+          <a (click)="save()" [attr.disabled]="team.length ? 'disabled' : ''" class="nav-link nav-icon a-hover" title="Save"><cds-icon shape="floppy" size="24"></cds-icon></a>
         </div>
       </header>
 
