@@ -16,7 +16,6 @@ export class MaxDaysASprintValidator implements AsyncValidator {
 
     return this.parametersService.getParameters().pipe(
       map((parameters: ParameterI) => {
-        debugger
         if (availableDaysInAWeek
           && holidaysForNextSprint
           && availableDaysInAWeek.value * parameters.nbWeeksForOneSprint >= holidaysForNextSprint.value) {
