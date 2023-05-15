@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import {EditParametersComponent} from "./edit-teammate.component";
+import { EditParametersComponent } from './edit-parameters.component';
 
 describe('EditParametersComponent', () => {
   let component: EditParametersComponent;
@@ -7,9 +7,8 @@ describe('EditParametersComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ EditParametersComponent ]
-    })
-    .compileComponents();
+      declarations: [EditParametersComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(EditParametersComponent);
     component = fixture.componentInstance;
