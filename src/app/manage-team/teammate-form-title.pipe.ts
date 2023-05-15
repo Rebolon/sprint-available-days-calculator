@@ -6,10 +6,9 @@ import TeammateI from '../add-teammate/teammate';
   standalone: true,
 })
 export class TeammateFormTitlePipe implements PipeTransform {
-
-  transform(editedTeammate: TeammateI|undefined, ...args: unknown[]): string {
+  transform(editedTeammate: TeammateI | undefined, ...args: unknown[]): string {
     if (editedTeammate === undefined) {
-      return 'Add new teammate'
+      return 'Add new teammate';
     }
 
     return `Edit ${editedTeammate.name}`;

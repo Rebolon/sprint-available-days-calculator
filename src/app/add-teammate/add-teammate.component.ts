@@ -1,13 +1,13 @@
-import {Component, Input, OnInit, SimpleChanges} from '@angular/core';
-import {TeamService} from "../manage-team/team.service";
-import TeammateI, {Teammate} from "./teammate";
-import {Router, RouterModule} from '@angular/router';
-import {TeammateForm} from './teammate.form';
-import {MaxDaysASprintValidator} from './max-days-a-sprint.validator';
-import {TeammateFormTitlePipe} from '../manage-team/teammate-form-title.pipe';
-import {ReactiveFormsModule} from '@angular/forms';
-import {ClrFormsModule} from '@clr/angular';
-import {CommonModule} from '@angular/common';
+import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
+import { TeamService } from '../manage-team/team.service';
+import TeammateI, { Teammate } from './teammate';
+import { Router, RouterModule } from '@angular/router';
+import { TeammateForm } from './teammate.form';
+import { MaxDaysASprintValidator } from './max-days-a-sprint.validator';
+import { TeammateFormTitlePipe } from '../manage-team/teammate-form-title.pipe';
+import { ReactiveFormsModule } from '@angular/forms';
+import { ClrFormsModule } from '@clr/angular';
+import { CommonModule } from '@angular/common';
 import '@cds/core/icon/register.js';
 import { ClarityIcons, logoutIcon, noteIcon, newIcon } from '@cds/core/icon';
 import { CdsIconModule } from '@cds/angular/icon';
@@ -17,10 +17,22 @@ ClarityIcons.addIcons(logoutIcon, noteIcon, newIcon);
 @Component({
   selector: 'app-add-teammate',
   standalone: true,
-  imports: [CommonModule, CdsIconModule, RouterModule, ReactiveFormsModule, ClrFormsModule, TeammateFormTitlePipe],
+  imports: [
+    CommonModule,
+    CdsIconModule,
+    RouterModule,
+    ReactiveFormsModule,
+    ClrFormsModule,
+    TeammateFormTitlePipe,
+  ],
   template: `
-    <h1>{{editedTeammate | teammateFormTitle}}</h1>
-    <form clrForm clrLayout="horizontal" [formGroup]="formTeammate" (ngSubmit)="addTeammate($event.submitter.name)">
+    <h1>{{ editedTeammate | teammateFormTitle }}</h1>
+    <form
+      [formGroup]="formTeammate"
+      (ngSubmit)="addTeammate($event.submitter.name)"
+      clrForm
+      clrLayout="horizontal"
+    >
       <clr-input-container>
         <label for="name">Name: </label>
         <input
@@ -126,12 +138,27 @@ ClarityIcons.addIcons(logoutIcon, noteIcon, newIcon);
 
       <div class="clr-row">
         <div class="clr-col-2">
-          <button name="saveAndRefresh" type="submit" class="btn btn-icon btn-primary btn-block" aria-label="save and add a new teammate" [attr.title]="getButtonText()" [disabled]="formTeammate.invalid">
+          <button
+            [attr.title]="getButtonText()"
+            [disabled]="formTeammate.invalid"
+            class="btn btn-icon btn-primary btn-block"
+            name="saveAndRefresh"
+            type="submit"
+            aria-label="save and add a new teammate"
+          >
             <cds-icon [attr.shape]="getButtonIcon()"></cds-icon>
           </button>
         </div>
         <div class="clr-col-2">
-          <button *ngIf="!editedTeammate" name="saveAndRedirect" type="submit" class="btn btn-icon btn-secondary btn-block" aria-label="save and redirect to list teammate" title="save and redirect to list teammate" [disabled]="formTeammate.invalid">
+          <button
+            *ngIf="!editedTeammate"
+            [disabled]="formTeammate.invalid"
+            class="btn btn-icon btn-secondary btn-block"
+            name="saveAndRedirect"
+            type="submit"
+            aria-label="save and redirect to list teammate"
+            title="save and redirect to list teammate"
+          >
             <cds-icon shape="logout"></cds-icon>
           </button>
         </div>

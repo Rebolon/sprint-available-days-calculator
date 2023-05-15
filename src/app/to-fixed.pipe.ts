@@ -5,9 +5,9 @@ import { Pipe, PipeTransform } from '@angular/core';
   standalone: true,
 })
 export class ToFixedPipe implements PipeTransform {
-  transform(value: number|undefined, ...args: number[]): string {
+  transform(value: number | undefined, ...args: number[]): string {
     if (value === undefined) {
-      return "";
+      return '';
     }
 
     const decimal = args.length ? args[0] : 2;

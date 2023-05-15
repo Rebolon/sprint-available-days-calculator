@@ -1,30 +1,35 @@
-import {AbstractControl, AsyncValidator, ValidationErrors} from '@angular/forms';
-import {Injectable} from '@angular/core';
-import {ParametersService} from '../edit-parameters/parameters.service';
+import {
+  AbstractControl,
+  AsyncValidator,
+  ValidationErrors,
+} from '@angular/forms';
+import { Injectable } from '@angular/core';
+import { ParametersService } from '../edit-parameters/parameters.service';
 import ParameterI from '../edit-parameters/parameters';
-import {delay, map, Observable} from 'rxjs';
+import { delay, map, Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class MaxDaysASprintValidator implements AsyncValidator {
   constructor(private parametersService: ParametersService) {}
 
-  validate(
-    control: AbstractControl
-  ): Observable<ValidationErrors | null> {
+  validate(control: AbstractControl): Observable<ValidationErrors | null> {
     const availableDaysInAWeek = control.get('availableDaysInAWeek');
     const holidaysForNextSprint = control.get('holidaysForNextSprint');
 
     return this.parametersService.getParameters().pipe(
       map((parameters: ParameterI) => {
-        if (availableDaysInAWeek
-          && holidaysForNextSprint
-          && availableDaysInAWeek.value * parameters.nbWeeksForOneSprint >= holidaysForNextSprint.value) {
-          return { maxDaysASprint: true }
+        if (
+          availableDaysInAWeek &&
+          holidaysForNextSprint &&
+          availableDaysInAWeek.value * parameters.nbWeeksForOneSprint >=
+            holidaysForNextSprint.value
+        ) {
+          return { maxDaysASprint: true };
         }
 
-        return null
+        return null;
       }),
-      delay(500),
-    )
+      delay(500)
+    );
   }
 }
