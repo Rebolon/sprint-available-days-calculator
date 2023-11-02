@@ -109,7 +109,7 @@ export class EditParametersComponent {
     });
   }
 
-  updateParameters(): void {
+  protected updateParameters(): void {
     if (this.formParameters.valid) {
       const newParameters = new Parameter(
         this.formParameters.controls['nbWeeksForOneSprint'].getRawValue(),

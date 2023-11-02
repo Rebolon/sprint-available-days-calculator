@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { TeamService } from '../manage-team/team.service';
 import TeammateI, { Teammate } from './teammate';
 import { Router, RouterModule } from '@angular/router';
@@ -45,7 +45,9 @@ ClarityIcons.addIcons(logoutIcon, noteIcon, newIcon);
         />
         <clr-control-helper>You must fill a name</clr-control-helper>
         <clr-control-error *clrIfError="'required'"
-          >This is a required field</clr-control-error
+          ><ng-container $ngIf="form"
+            >This is a required field</ng-container
+          ></clr-control-error
         >
         <clr-control-error *clrIfError="'minlength'; error as err"
           >Must be at least
@@ -167,7 +169,7 @@ ClarityIcons.addIcons(logoutIcon, noteIcon, newIcon);
   `,
   styles: [],
 })
-export class AddTeammateComponent implements OnInit {
+export class AddTeammateComponent implements OnInit, OnChanges {
   @Input() editedTeammate: TeammateI | undefined = undefined;
   protected formTeammate: TeammateForm = {} as TeammateForm;
 
@@ -179,15 +181,9 @@ export class AddTeammateComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.editedTeammate) {
-      this.formTeammate = new TeammateForm(
-        this.editedTeammate,
-        this.maxDaysInASprintValidator
-      );
+      this.createForm(this.editedTeammate);
     } else {
-      this.formTeammate = new TeammateForm(
-        new Teammate(),
-        this.maxDaysInASprintValidator
-      );
+      this.createForm(new Teammate());
     }
   }
 
@@ -200,14 +196,11 @@ export class AddTeammateComponent implements OnInit {
         return;
       }
 
-      this.formTeammate = new TeammateForm(
-        changes['editedTeammate'].currentValue,
-        this.maxDaysInASprintValidator
-      );
+      this.createForm(changes['editedTeammate'].currentValue);
     }
   }
 
-  addTeammate(event: string) {
+  protected addTeammate(event: string) {
     const redirect = event === 'saveAndRedirect' ? true : false;
     if (this.formTeammate.valid) {
       try {
@@ -224,7 +217,7 @@ export class AddTeammateComponent implements OnInit {
         } else {
           this.teamService.addTeammate(newTeammate);
         }
-        this.formTeammate.reset(new Teammate());
+        this.createForm(new Teammate());
 
         if (redirect) {
           this.router.navigateByUrl('manage-team');
@@ -235,11 +228,18 @@ export class AddTeammateComponent implements OnInit {
     }
   }
 
-  getButtonText() {
+  protected getButtonText() {
     return this.editedTeammate ? 'edit' : 'add';
   }
 
-  getButtonIcon() {
+  protected getButtonIcon() {
     return this.editedTeammate ? 'note' : 'new';
+  }
+
+  private createForm(teammate: TeammateI): void {
+    this.formTeammate = new TeammateForm(
+      teammate,
+      this.maxDaysInASprintValidator
+    );
   }
 }

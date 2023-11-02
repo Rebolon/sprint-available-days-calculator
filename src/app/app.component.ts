@@ -137,6 +137,7 @@ export class AppComponent implements OnInit {
     this.checkStorage();
   }
 
+  /* all localStorage part should be moved into a StorageService */
   protected save() {
     localStorage.setItem('team', JSON.stringify(this.team));
     localStorage.setItem(

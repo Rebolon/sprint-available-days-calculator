@@ -4,7 +4,13 @@
     "projects/**/*"
   ],
   "rules": {
-    "max-len": ["error", { "code": 120, "tabWidth": 2 }]
+    "max-len": [
+      "error",
+      {
+        "code": 120,
+        "tabWidth": 2
+      }
+    ]
   },
   "overrides": [
     {
@@ -40,7 +46,10 @@
             "style": "kebab-case"
           }
         ],
-        "semi": ["error", "always"]
+        "semi": [
+          "error",
+          "always"
+        ]
       }
     },
     {
@@ -52,11 +61,22 @@
       ]
     },
     {
-      "files": ["*.html"],
-      "excludedFiles": ["*inline-template-*.component.html"],
-      "extends": ["plugin:prettier/recommended"],
+      "files": [
+        "*.html"
+      ],
+      "excludedFiles": [
+        "*inline-template-*.component.html"
+      ],
+      "extends": [
+        "plugin:prettier/recommended"
+      ],
       "rules": {
-        "prettier/prettier": ["error", { "parser": "angular" }]
+        "prettier/prettier": [
+          "error",
+          {
+            "parser": "angular"
+          }
+        ]
       }
     }
   ]
