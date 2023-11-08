@@ -45,9 +45,7 @@ ClarityIcons.addIcons(logoutIcon, noteIcon, newIcon);
         />
         <clr-control-helper>You must fill a name</clr-control-helper>
         <clr-control-error *clrIfError="'required'"
-          ><ng-container $ngIf="form"
-            >This is a required field</ng-container
-          ></clr-control-error
+          >This is a required field</clr-control-error
         >
         <clr-control-error *clrIfError="'minlength'; error as err"
           >Must be at least
