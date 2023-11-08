@@ -17,9 +17,12 @@ ClarityIcons.addIcons(pencilIcon);
   standalone: true,
   imports: [CommonModule, CdsIconModule, ToFixedPipe, AddTeammateComponent],
   template: `
-    <h1 *ngIf="team.length > 0">List of teammates</h1>
+    @if (team.length > 0) {
+    <h1>List of teammates</h1>
+    }
     <ul>
-      <li *ngFor="let teammate of team; trackBy: trackByName">
+      @for (teammate of team; track teammate.name) {
+      <li>
         <button
           [disabled]="editedTeammate && editedTeammate === teammate"
           (click)="editTeammate(teammate)"
@@ -35,6 +38,7 @@ ClarityIcons.addIcons(pencilIcon);
         }}
         days available
       </li>
+      }
     </ul>
 
     <app-add-teammate
@@ -42,7 +46,7 @@ ClarityIcons.addIcons(pencilIcon);
       [editedTeammate]="editedTeammate"
     ></app-add-teammate>
   `,
-  styles: ['ul > li { list-style: none; }'],
+  styles: 'ul > li { list-style: none; }',
 })
 export class ListTeamComponent implements OnInit {
   team: TeammateI[] = [];
@@ -68,9 +72,5 @@ export class ListTeamComponent implements OnInit {
 
   protected editTeammate(teammate: TeammateI): void {
     this.editedTeammate = teammate;
-  }
-
-  protected trackByName(index: number, teammate: TeammateI): string {
-    return teammate.name;
   }
 }
