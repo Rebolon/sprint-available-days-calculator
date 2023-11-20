@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Component, OnInit } from '@angular/core';
 import { TeamService } from '../manage-team/team.service';
 import TeammateI from '../add-teammate/teammate';
@@ -13,12 +14,8 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule, ClrAlertModule, ToFixedPipe],
   template: `
-    <ng-container>
-      <clr-alert
-        *ngIf="team.length > 0"
-        [clrAlertType]="'info'"
-        [clrAlertClosable]="false"
-      >
+    @if (team.length > 0) {
+    <clr-alert [clrAlertType]="'info'" [clrAlertClosable]="false">
         <clr-alert-item>
           <span class="alert-text">
             {{ availableDaysForTeam | toFixed: 2 }} days available for the
@@ -26,7 +23,7 @@ import { CommonModule } from '@angular/common';
           </span>
         </clr-alert-item>
       </clr-alert>
-    </ng-container>
+    }
   `,
   styles: [],
 })

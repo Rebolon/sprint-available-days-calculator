@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -37,8 +38,8 @@ ClarityIcons.addIcons(angleIcon, userIcon, cogIcon, calculatorIcon, floppyIcon);
   template: `
     <div class="main-container">
       <clr-alerts>
+        @if (alert.hasAlert() | async) {
         <clr-alert
-          *ngIf="alert.hasAlert() | async"
           [clrAlertType]="'info'"
           [clrAlertClosable]="true"
         >
@@ -48,8 +49,10 @@ ClarityIcons.addIcons(angleIcon, userIcon, cogIcon, calculatorIcon, floppyIcon);
             </span>
           </clr-alert-item>
         </clr-alert>
+        }
 
-        <clr-alert *ngIf="hasSavedData" [clrAlertClosable]="true">
+        @if (hasSavedData) {
+        <clr-alert [clrAlertClosable]="true">
           <clr-alert-item>
             <span class="alert-text">
               A save has been found in your browser, do you want to restore it ?
@@ -76,6 +79,7 @@ ClarityIcons.addIcons(angleIcon, userIcon, cogIcon, calculatorIcon, floppyIcon);
             </div>
           </clr-alert-item>
         </clr-alert>
+        }
       </clr-alerts>
       <header class="header header-6">
         <div class="branding">
@@ -113,7 +117,7 @@ ClarityIcons.addIcons(angleIcon, userIcon, cogIcon, calculatorIcon, floppyIcon);
       </div>
     </div>
   `,
-  styles: ['.a-hover { cursor: pointer; }'],
+  styles: '.a-hover { cursor: pointer; }',
 })
 export class AppComponent implements OnInit {
   title = 'sprint-resources-availability';

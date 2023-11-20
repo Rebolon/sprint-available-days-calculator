@@ -1,0 +1,1 @@
+var e=class extends Error{constructor(s){super(s)}};var n=class{constructor(s=3,t=.1,r=.5){if(this.nbWeeksForOneSprint=s,t<0||t>1)throw new e(`MarginRate must be between 0 and 1. ${t} provided`);if(this.marginRate=t,r<0||r>1)throw new e(`velocityRateForNewComer must be between 0 and 1. ${r} provided`);this.velocityRateForNewComer=r}},i=new n;export{n as a,i as b};
