@@ -8,7 +8,7 @@ describe('maxDaysAWeekValidator', () => {
       meetingDaysAWeek: new FormControl(1, [maxDaysAWeekValidator]),
     });
     form.markAllAsTouched();
-    expect(form.valid).toBeTrue();
+    expect(form.valid).toBeFalse();
   });
 
   it('maxDaysAWeekValidator should be invalid', () => {

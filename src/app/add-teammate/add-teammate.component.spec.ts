@@ -7,7 +7,7 @@ describe('AddTeammateComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [AddTeammateComponent],
+      imports: [AddTeammateComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AddTeammateComponent);

@@ -7,7 +7,7 @@ describe('AvailableDaysComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [AvailableDaysComponent],
+      imports: [AvailableDaysComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AvailableDaysComponent);
