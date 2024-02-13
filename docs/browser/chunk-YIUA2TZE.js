@@ -1,1 +1,0 @@
-import{a}from"./chunk-YDK46D7D.js";import"./chunk-BABKYKU4.js";import"./chunk-YF2XKZ6H.js";import"./chunk-4665FI4M.js";import"./chunk-PFVGJA53.js";import"./chunk-5T2A2BUS.js";import"./chunk-36EA5VZS.js";export{a as ListTeamComponent};
