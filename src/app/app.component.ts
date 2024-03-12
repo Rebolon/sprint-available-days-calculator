@@ -1,26 +1,26 @@
 /* eslint-disable prettier/prettier */
-import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, Signal, computed } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { AlertService } from './alert.service';
-import { TeamService } from './manage-team/team.service';
-import { ParametersService } from './edit-parameters/parameters.service';
-import TeammateI, { Teammate } from './add-teammate/teammate';
-import ParameterI, {
-  DefaultParameter,
-  Parameter,
-} from './edit-parameters/parameters';
-import { ClrAlertModule, ClrDropdownModule } from '@clr/angular';
-import '@cds/core/icon/register.js';
+import { CdsIconModule } from '@cds/angular';
 import {
   ClarityIcons,
   angleIcon,
-  userIcon,
-  cogIcon,
   calculatorIcon,
+  cogIcon,
   floppyIcon,
+  userIcon,
 } from '@cds/core/icon';
-import { CdsIconModule } from '@cds/angular';
+import '@cds/core/icon/register.js';
+import { ClrAlertModule, ClrDropdownModule } from '@clr/angular';
+import TeammateI, { Teammate } from './add-teammate/teammate';
+import { AlertService } from './alert.service';
+import {
+  Parameter
+} from './edit-parameters/parameters';
+import { ParametersService } from './edit-parameters/parameters.service';
+import { TeamService } from './manage-team/team.service';
+import { StorageService } from './storage.service';
 
 ClarityIcons.addIcons(angleIcon, userIcon, cogIcon, calculatorIcon, floppyIcon);
 
@@ -51,7 +51,7 @@ ClarityIcons.addIcons(angleIcon, userIcon, cogIcon, calculatorIcon, floppyIcon);
         </clr-alert>
         }
 
-        @if (hasSavedData) {
+        @if (storageService.hasSavedData()) {
         <clr-alert [clrAlertClosable]="true">
           <clr-alert-item>
             <span class="alert-text">
@@ -98,7 +98,7 @@ ClarityIcons.addIcons(angleIcon, userIcon, cogIcon, calculatorIcon, floppyIcon);
             ><cds-icon shape="cog" size="24"></cds-icon
           ></a>
           <a
-            [attr.disabled]="team.length ? 'disabled' : ''"
+            [attr.disabled]="teamService.getTeammates().length ? 'disabled' : ''"
             (click)="save()"
             class="nav-link nav-icon a-hover"
             ><cds-icon shape="floppy" size="24"></cds-icon
@@ -119,56 +119,35 @@ ClarityIcons.addIcons(angleIcon, userIcon, cogIcon, calculatorIcon, floppyIcon);
   `,
   styles: '.a-hover { cursor: pointer; }',
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   title = 'sprint-resources-availability';
-  protected team: TeammateI[] = [];
-  private parameters: ParameterI | undefined;
+  protected getSavedTeammates: Signal<string> = computed(() =>
+    this.teamService.getTeammates()
+      .map((teammate: TeammateI): string => teammate.name)
+      .join(', ')
+  )
+  // @todo do we need to manage unsubscribe with toSignal ?
   protected hasSavedData = false;
 
   constructor(
     protected alert: AlertService,
     protected teamService: TeamService,
-    protected parametersService: ParametersService
+    protected parametersService: ParametersService,
+    protected storageService: StorageService,
   ) {}
 
-  ngOnInit(): void {
-    this.teamService
-      .getTeammates()
-      .subscribe((team: TeammateI[]) => (this.team = team));
-    this.parametersService
-      .getParameters()
-      .subscribe((parameters: ParameterI) => (this.parameters = parameters));
-    this.checkStorage();
-  }
-
-  /* all localStorage part should be moved into a StorageService */
   protected save() {
-    localStorage.setItem('team', JSON.stringify(this.team));
-    localStorage.setItem(
-      'parameters',
-      this.parameters
-        ? JSON.stringify(this.parameters)
-        : JSON.stringify(DefaultParameter)
-    );
-
-    this.alert.setAlert('Save done');
+    this.storageService.save({team: this.teamService.getTeammates(), parameters: this.parametersService.getParameters()});
+    this.alert.setAlert('save done');
   }
 
   protected deleteSavedData() {
-    localStorage.removeItem('team');
-    localStorage.removeItem('parameters');
-
-    this.hasSavedData = false;
+    this.storageService.clear();
     this.alert.setAlert('delete done');
   }
 
   protected restore() {
-    const team: TeammateI[] = localStorage.getItem('team')
-      ? JSON.parse(localStorage.getItem('team') as string)
-      : [];
-    const parameters = localStorage.getItem('parameters')
-      ? JSON.parse(localStorage.getItem('parameters') as string)
-      : undefined;
+    const {team, parameters} = this.storageService.restore()
 
     team.forEach((teammate: TeammateI) =>
       this.teamService.addTeammate(
@@ -190,20 +169,6 @@ export class AppComponent implements OnInit {
       )
     );
 
-    this.hasSavedData = false;
-
     this.alert.setAlert('Restore done');
-  }
-
-  protected checkStorage() {
-    if (localStorage.getItem('team') && localStorage.getItem('parameters')) {
-      this.hasSavedData = true;
-    }
-  }
-
-  protected getSavedTeammates(): string {
-    return this.team
-      .map((teammate: TeammateI): string => teammate.name)
-      .join(', ');
   }
 }

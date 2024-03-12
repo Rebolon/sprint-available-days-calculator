@@ -7,6 +7,7 @@ import { Injectable } from '@angular/core';
 import { ParametersService } from '../edit-parameters/parameters.service';
 import ParameterI from '../edit-parameters/parameters';
 import { delay, map, Observable } from 'rxjs';
+import { toObservable } from '@angular/core/rxjs-interop';
 
 @Injectable({ providedIn: 'root' })
 export class MaxDaysASprintValidator implements AsyncValidator {
@@ -16,7 +17,7 @@ export class MaxDaysASprintValidator implements AsyncValidator {
     const availableDaysInAWeek = control.get('availableDaysInAWeek');
     const holidaysForNextSprint = control.get('holidaysForNextSprint');
 
-    return this.parametersService.getParameters().pipe(
+    return toObservable(this.parametersService.getParameters).pipe(
       map((parameters: ParameterI) => {
         if (
           availableDaysInAWeek &&
@@ -29,7 +30,7 @@ export class MaxDaysASprintValidator implements AsyncValidator {
 
         return null;
       }),
-      delay(500)
+      delay(500),
     );
   }
 }

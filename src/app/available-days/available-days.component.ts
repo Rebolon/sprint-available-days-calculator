@@ -1,24 +1,23 @@
 /* eslint-disable prettier/prettier */
-import { Component, OnInit } from '@angular/core';
-import { TeamService } from '../manage-team/team.service';
-import TeammateI from '../add-teammate/teammate';
-import { ParametersService } from '../edit-parameters/parameters.service';
-import ParameterI, { DefaultParameter } from '../edit-parameters/parameters';
-import { AlertService } from '../alert.service';
-import { ClrAlertModule } from '@clr/angular';
-import { ToFixedPipe } from '../to-fixed.pipe';
 import { CommonModule } from '@angular/common';
+import { Component, Signal, computed } from '@angular/core';
+import { ClrAlertModule } from '@clr/angular';
+import TeammateI from '../add-teammate/teammate';
+import { AlertService } from '../alert.service';
+import { ParametersService } from '../edit-parameters/parameters.service';
+import { TeamService } from '../manage-team/team.service';
+import { ToFixedPipe } from '../to-fixed.pipe';
 
 @Component({
   selector: 'app-available-days',
   standalone: true,
   imports: [CommonModule, ClrAlertModule, ToFixedPipe],
   template: `
-    @if (team.length > 0) {
+    @if (teamService.getTeammates().length > 0) {
     <clr-alert [clrAlertType]="'info'" [clrAlertClosable]="false">
         <clr-alert-item>
           <span class="alert-text">
-            {{ availableDaysForTeam | toFixed: 2 }} days available for the
+            {{ availableDaysForTeam() | toFixed: 2 }} days available for the
             sprint.
           </span>
         </clr-alert-item>
@@ -27,44 +26,20 @@ import { CommonModule } from '@angular/common';
   `,
   styles: [],
 })
-export class AvailableDaysComponent implements OnInit {
-  availableDaysForTeam: number | undefined;
-  parameters: ParameterI = DefaultParameter;
-  team: TeammateI[] = [];
-
-  constructor(
-    protected teamService: TeamService,
-    protected parametersService: ParametersService,
-    protected alertService: AlertService
-  ) {}
-
-  ngOnInit(): void {
-    this.teamService.getTeammates().subscribe((team: TeammateI[]) => {
-      this.team = team;
-      this.calcAvailableDays();
-    });
-
-    this.parametersService
-      .getParameters()
-      .subscribe((parameters: ParameterI) => {
-        this.parameters = parameters;
-        this.calcAvailableDays();
-      });
-  }
-
-  protected calcAvailableDays(): void {
-    let errors: string[] = [];
+export class AvailableDaysComponent {
+  availableDaysForTeam: Signal<number|undefined> = computed(() => {
+    const errors: string[] = [];
     let availableDaysForTeam = 0;
 
-    this.team.forEach((teammate: TeammateI) => {
+    this.teamService.getTeammates().forEach((teammate: TeammateI) => {
       try {
         let availableDays = teammate.getAvailableDaysInSprint(
-          this.parameters.nbWeeksForOneSprint
+          this.parametersService.getParameters().nbWeeksForOneSprint
         );
         if (teammate.isNewComer) {
           availableDays =
             availableDays -
-            availableDays * this.parameters.velocityRateForNewComer;
+            availableDays * this.parametersService.getParameters().velocityRateForNewComer;
         }
 
         availableDaysForTeam += availableDays;
@@ -74,19 +49,24 @@ export class AvailableDaysComponent implements OnInit {
     });
 
     if (errors.length) {
-      this.availableDaysForTeam = undefined;
+      return undefined;
       this.alertService.setAlert(
         `Seems to be a problem in holidays of teammate and available days in a sprint: ${errors.join(
           ', '
         )}`
       );
     } else {
-      this.availableDaysForTeam =
-        Math.round(
-          (availableDaysForTeam -
-            availableDaysForTeam * this.parameters.marginRate) *
-            100
-        ) / 100;
+      return Math.round(
+        (availableDaysForTeam -
+          availableDaysForTeam * this.parametersService.getParameters().marginRate) *
+          100
+      ) / 100;
     }
-  }
+  });
+
+  constructor(
+    protected teamService: TeamService,
+    protected parametersService: ParametersService,
+    protected alertService: AlertService
+  ) {}
 }

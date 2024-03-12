@@ -1,9 +1,10 @@
-import { Injectable } from '@angular/core';
-import { distinct, Observable, ReplaySubject } from 'rxjs';
-import ParameterI from './parameters';
+import { Injectable, Signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { ReplaySubject, distinct } from 'rxjs';
+import ParameterI, { Parameter } from './parameters';
 
 export interface ParametersServiceI {
-  getParameters(): Observable<ParameterI>;
+  getParameters: Signal<ParameterI>;
   setParameters(parameters: ParameterI): void;
 }
 
@@ -13,9 +14,9 @@ export interface ParametersServiceI {
 export class ParametersService implements ParametersServiceI {
   private parameters$: ReplaySubject<ParameterI> = new ReplaySubject(1);
 
-  getParameters(): Observable<ParameterI> {
-    return this.parameters$.asObservable().pipe(distinct());
-  }
+  getParameters = toSignal(this.parameters$.asObservable().pipe(distinct()), {
+    initialValue: new Parameter(),
+  });
 
   setParameters(parameters: ParameterI): void {
     this.parameters$.next(parameters);

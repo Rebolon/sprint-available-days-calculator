@@ -1,11 +1,12 @@
-import { Component, Output } from '@angular/core';
+import { Component, Signal } from '@angular/core';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule } from '@angular/forms';
-import ParameterI, { DefaultParameter, Parameter } from './parameters';
-import { Observable } from 'rxjs';
-import { ParametersService } from './parameters.service';
-import { ParametersForm } from './parameters.form';
 import { ClrFormsModule } from '@clr/angular';
+import { map } from 'rxjs';
 import { AvailableDaysComponent } from '../available-days/available-days.component';
+import ParameterI, { DefaultParameter, Parameter } from './parameters';
+import { ParametersForm } from './parameters.form';
+import { ParametersService } from './parameters.service';
 
 @Component({
   selector: 'app-edit-parameters',
@@ -13,7 +14,7 @@ import { AvailableDaysComponent } from '../available-days/available-days.compone
   imports: [ClrFormsModule, ReactiveFormsModule, AvailableDaysComponent],
   template: `
     <h1>Adapt parameters</h1>
-    <form [formGroup]="formParameters" clrForm clrLayout="horizontal">
+    <form [formGroup]="formParameters()" clrForm clrLayout="horizontal">
       <clr-input-container>
         <label for="nbWeeksForOneSprint">Number of weeks in a sprint: </label>
         <input
@@ -94,27 +95,21 @@ import { AvailableDaysComponent } from '../available-days/available-days.compone
   styles: [],
 })
 export class EditParametersComponent {
-  @Output() parameters: Observable<ParameterI>;
-  protected formParameters: ParametersForm = {} as ParametersForm;
+  protected formParameters: Signal<ParametersForm> = toSignal(
+    toObservable(this.parametersService.getParameters).pipe(
+      map((parameters: ParameterI) => new ParametersForm(parameters)),
+    ),
+    { initialValue: new ParametersForm(DefaultParameter) },
+  );
 
-  constructor(protected parametersService: ParametersService) {
-    this.parameters = parametersService.getParameters();
-
-    this.formParameters = new ParametersForm(DefaultParameter);
-
-    parametersService.getParameters().subscribe({
-      next: (parameters: ParameterI) => {
-        this.formParameters = new ParametersForm(parameters);
-      },
-    });
-  }
+  constructor(protected parametersService: ParametersService) {}
 
   protected updateParameters(): void {
-    if (this.formParameters.valid) {
+    if (this.formParameters().valid) {
       const newParameters = new Parameter(
-        this.formParameters.controls['nbWeeksForOneSprint'].getRawValue(),
-        this.formParameters.controls['marginRate'].getRawValue(),
-        this.formParameters.controls['velocityRateForNewComer'].getRawValue()
+        this.formParameters().controls['nbWeeksForOneSprint'].getRawValue(),
+        this.formParameters().controls['marginRate'].getRawValue(),
+        this.formParameters().controls['velocityRateForNewComer'].getRawValue(),
       );
 
       this.parametersService.setParameters(newParameters);
