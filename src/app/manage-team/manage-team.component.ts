@@ -18,8 +18,6 @@ import { TeamService } from './team.service';
     AvailableDaysComponent,
   ],
   template: `
-    <app-list-team></app-list-team>
-
     <clr-alert
       *ngIf="this.team().length === 0"
       [clrAlertType]="'info'"
@@ -34,6 +32,8 @@ import { TeamService } from './team.service';
     </clr-alert>
 
     <app-available-days></app-available-days>
+
+    <app-list-team></app-list-team>
   `,
   styles: [],
 })
