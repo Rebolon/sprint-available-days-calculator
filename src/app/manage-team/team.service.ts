@@ -1,9 +1,10 @@
-import { Injectable } from '@angular/core';
-import { first, map, Observable, ReplaySubject, tap } from 'rxjs';
+import { Injectable, Signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { ReplaySubject, first, map } from 'rxjs';
 import TeammateI from '../add-teammate/teammate';
 
 export interface TeamServiceI {
-  getTeammates(): Observable<TeammateI[]>;
+  getTeammates: Signal<TeammateI[]>;
   addTeammate(teammate: TeammateI): void;
 }
 
@@ -17,21 +18,22 @@ export class TeamService implements TeamServiceI {
     this.team$.next([]);
   }
 
-  getTeammates(): Observable<TeammateI[]> {
-    return this.team$.asObservable().pipe(
+  getTeammates = toSignal(
+    this.team$.asObservable().pipe(
       map((teammates) =>
         teammates.sort((a: TeammateI, b: TeammateI) => {
           if (a.name.toLowerCase() < b.name.toLowerCase()) {
             return -1;
-          } else if (a.name.toLowerCase() < b.name.toLowerCase()) {
+          } else if (a.name.toLowerCase() > b.name.toLowerCase()) {
             return 1;
           } else {
             return 0;
           }
-        })
-      )
-    );
-  }
+        }),
+      ),
+    ),
+    { initialValue: [] },
+  );
 
   addTeammate(newTeammate: TeammateI): void {
     this.team$
@@ -41,7 +43,7 @@ export class TeamService implements TeamServiceI {
           teammates.push(newTeammate);
 
           return teammates;
-        })
+        }),
       )
       .subscribe((teammates) => {
         this.team$.next(teammates);
@@ -63,7 +65,7 @@ export class TeamService implements TeamServiceI {
           });
 
           return teammates;
-        })
+        }),
       )
       .subscribe((teammates) => {
         this.team$.next(teammates);

@@ -1,1 +1,0 @@
-import{ea as n}from"./chunk-KYEXPK5P.js";var s=(()=>{let t=class t{transform(i,...e){if(i===void 0)return"";let o=e.length?e[0]:2;return i.toFixed(o)}};t.\u0275fac=function(e){return new(e||t)},t.\u0275pipe=n({name:"toFixed",type:t,pure:!0,standalone:!0});let r=t;return r})();export{s as a};
