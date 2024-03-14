@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { CommonModule } from '@angular/common';
-import { Component, Signal, computed } from '@angular/core';
+import { Component, Signal, computed, inject } from '@angular/core';
 import { ClrAlertModule } from '@clr/angular';
 import TeammateI from '../add-teammate/teammate';
 import { AlertService } from '../alert.service';
@@ -27,7 +27,10 @@ import { ToFixedPipe } from '../to-fixed.pipe';
   styles: [],
 })
 export class AvailableDaysComponent {
-  availableDaysForTeam: Signal<number|undefined> = computed(() => {
+  protected teamService = inject(TeamService);
+  protected parametersService = inject(ParametersService);
+  protected alertService = inject(AlertService);
+  protected availableDaysForTeam: Signal<number|undefined> = computed(() => {
     const errors: string[] = [];
     let availableDaysForTeam = 0;
 
@@ -63,10 +66,4 @@ export class AvailableDaysComponent {
       ) / 100;
     }
   });
-
-  constructor(
-    protected teamService: TeamService,
-    protected parametersService: ParametersService,
-    protected alertService: AlertService
-  ) {}
 }

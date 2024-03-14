@@ -1,4 +1,4 @@
-import { Component, Signal } from '@angular/core';
+import { Component, Signal, inject } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ClrFormsModule } from '@clr/angular';
@@ -95,15 +95,13 @@ import { ParametersService } from './parameters.service';
   styles: [],
 })
 export class EditParametersComponent {
+  protected parametersService = inject(ParametersService);
   protected formParameters: Signal<ParametersForm> = toSignal(
     toObservable(this.parametersService.getParameters).pipe(
       map((parameters: ParameterI) => new ParametersForm(parameters)),
     ),
     { initialValue: new ParametersForm(DefaultParameter) },
   );
-
-  constructor(protected parametersService: ParametersService) {}
-
   protected updateParameters(): void {
     if (this.formParameters().valid) {
       const newParameters = new Parameter(

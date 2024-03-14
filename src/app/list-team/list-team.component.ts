@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Signal, WritableSignal, computed, signal } from '@angular/core';
+import { Component, Signal, WritableSignal, computed, inject, signal } from '@angular/core';
 import { AddTeammateComponent } from '../add-teammate/add-teammate.component';
 import TeammateI from '../add-teammate/teammate';
 import { ParametersService } from '../edit-parameters/parameters.service';
@@ -33,8 +33,9 @@ ClarityIcons.addIcons(pencilIcon);
           </button>
           {{ teammate.name }}:
           {{
-            teammate.getAvailableDaysInSprint(parametersService.getParameters().nbWeeksForOneSprint)
-              | toFixed: 2
+            teammate.getAvailableDaysInSprint(
+              parametersService.getParameters().nbWeeksForOneSprint
+            ) | toFixed: 2
           }}
           days available
         </li>
@@ -44,21 +45,22 @@ ClarityIcons.addIcons(pencilIcon);
     <app-add-teammate
       *ngIf="editedTeammate()"
       [editedTeammate]="editedTeammate()"
+      (saved)="clearEditForm()"
     ></app-add-teammate>
   `,
   styles: 'ul > li { list-style: none; }',
 })
 export class ListTeamComponent {
-  protected team: Signal<TeammateI[]> = computed(() => this.teamService.getTeammates());
-  editedTeammate: WritableSignal<TeammateI | undefined> = signal(undefined);
+  protected teamService = inject(TeamService);
+  protected parametersService = inject(ParametersService);
+  protected team: Signal<TeammateI[]> = computed(() =>
+    this.teamService.getTeammates(),
+  );
+  protected editedTeammate: WritableSignal<TeammateI | undefined> = signal(undefined);
 
-  constructor(
-    protected teamService: TeamService,
-    protected parametersService: ParametersService,
-  ) {
+  protected clearEditForm(): void {
     this.editedTeammate.set(undefined);
   }
-
   protected editTeammate(teammate: TeammateI): void {
     this.editedTeammate.set(teammate);
   }

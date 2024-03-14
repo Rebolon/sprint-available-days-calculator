@@ -1,15 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed } from '@angular/core';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { Component, Signal, computed, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { ClrAlertModule } from '@clr/angular';
 import TeammateI from '../add-teammate/teammate';
 import { AvailableDaysComponent } from '../available-days/available-days.component';
-import ParameterI, { DefaultParameter } from '../edit-parameters/parameters';
-import { ParametersService } from '../edit-parameters/parameters.service';
 import { ListTeamComponent } from '../list-team/list-team.component';
 import { TeamService } from './team.service';
-import { map } from 'rxjs';
 
 @Component({
   selector: 'app-manage-team',
@@ -24,9 +20,8 @@ import { map } from 'rxjs';
   template: `
     <app-list-team></app-list-team>
 
-    <h1>{{nbOfTeammates()}}</h1>
     <clr-alert
-      *ngIf="nbOfTeammates() === 0"
+      *ngIf="this.team().length === 0"
       [clrAlertType]="'info'"
       [clrAlertClosable]="false"
     >
@@ -43,6 +38,8 @@ import { map } from 'rxjs';
   styles: [],
 })
 export class ManageTeamComponent {
-  nbOfTeammates = computed(() => this.teamService.getTeammates().length);
-  constructor(protected teamService: TeamService) {}
+  protected teamService = inject(TeamService);
+  protected team: Signal<TeammateI[]> = computed(() =>
+    this.teamService.getTeammates(),
+  );
 }

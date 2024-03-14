@@ -31,9 +31,9 @@ export class Teammate implements TeammateI {
   }
 
   getAvailableDaysInSprint(nbWeeksForOneSprint: number): number {
-    let nbOfDaysInASprintForTeammate =
+    const nbOfDaysInASprintForTeammate =
       this.availableDaysInAWeek * nbWeeksForOneSprint;
-    let availableDays =
+    const availableDays =
       nbOfDaysInASprintForTeammate - this.holidaysForNextSprint;
 
     if (availableDays < 0) {
@@ -41,7 +41,7 @@ export class Teammate implements TeammateI {
       (${this.holidaysForNextSprint} vs ${nbOfDaysInASprintForTeammate}`);
     }
 
-    let meetingsDays = this.meetingDaysAWeek * nbWeeksForOneSprint;
+    const meetingsDays = this.meetingDaysAWeek * nbWeeksForOneSprint;
 
     return availableDays - meetingsDays;
   }

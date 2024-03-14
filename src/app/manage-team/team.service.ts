@@ -1,7 +1,7 @@
 import { Injectable, Signal } from '@angular/core';
-import { first, map, Observable, ReplaySubject } from 'rxjs';
-import TeammateI from '../add-teammate/teammate';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { ReplaySubject, first, map } from 'rxjs';
+import TeammateI from '../add-teammate/teammate';
 
 export interface TeamServiceI {
   getTeammates: Signal<TeammateI[]>;
@@ -32,7 +32,7 @@ export class TeamService implements TeamServiceI {
         }),
       ),
     ),
-    { initialValue: [] }
+    { initialValue: [] },
   );
 
   addTeammate(newTeammate: TeammateI): void {

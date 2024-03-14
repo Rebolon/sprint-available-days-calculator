@@ -1,16 +1,32 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { TeamService } from '../manage-team/team.service';
-import TeammateI, { Teammate } from './teammate';
-import { Router, RouterModule } from '@angular/router';
-import { TeammateForm } from './teammate.form';
-import { MaxDaysASprintValidator } from './max-days-a-sprint.validator';
-import { TeammateFormTitlePipe } from '../manage-team/teammate-form-title.pipe';
-import { ReactiveFormsModule } from '@angular/forms';
-import { ClrFormsModule } from '@clr/angular';
 import { CommonModule } from '@angular/common';
-import '@cds/core/icon/register.js';
-import { ClarityIcons, logoutIcon, noteIcon, newIcon } from '@cds/core/icon';
+import {
+  Component,
+  EventEmitter,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+  input,
+  output,
+  inject,
+  OutputEmitterRef,
+  InputSignal,
+  effect,
+  computed,
+  Signal,
+  EffectRef,
+} from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { Router, RouterModule } from '@angular/router';
 import { CdsIconModule } from '@cds/angular/icon';
+import { ClarityIcons, logoutIcon, newIcon, noteIcon } from '@cds/core/icon';
+import '@cds/core/icon/register.js';
+import { ClrFormsModule } from '@clr/angular';
+import { TeamService } from '../manage-team/team.service';
+import { TeammateFormTitlePipe } from '../manage-team/teammate-form-title.pipe';
+import { MaxDaysASprintValidator } from './max-days-a-sprint.validator';
+import TeammateI, { Teammate } from './teammate';
+import { TeammateForm } from './teammate.form';
 
 ClarityIcons.addIcons(logoutIcon, noteIcon, newIcon);
 
@@ -26,10 +42,10 @@ ClarityIcons.addIcons(logoutIcon, noteIcon, newIcon);
     TeammateFormTitlePipe,
   ],
   template: `
-    <h1>{{ editedTeammate | teammateFormTitle }}</h1>
+    <h1>{{ editedTeammate() | teammateFormTitle }}</h1>
     <form
-      [formGroup]="formTeammate"
-      (ngSubmit)="addTeammate($event.submitter.name)"
+      [formGroup]="formTeammate()"
+      (ngSubmit)="addTeammate()"
       clrForm
       clrLayout="horizontal"
     >
@@ -124,9 +140,10 @@ ClarityIcons.addIcons(logoutIcon, noteIcon, newIcon);
       </clr-input-container>
 
       <clr-checkbox-container>
-        <label>Is new teammate ? </label>
+        <label for="isNewTeammate">Is new teammate ?</label>
         <clr-checkbox-wrapper>
           <input
+            id="isNewTeammate"
             clrCheckbox
             type="checkbox"
             formControlName="isNewComer"
@@ -140,9 +157,8 @@ ClarityIcons.addIcons(logoutIcon, noteIcon, newIcon);
         <div class="clr-col-2">
           <button
             [attr.title]="getButtonText()"
-            [disabled]="formTeammate.invalid"
+            [disabled]="formTeammate().invalid"
             class="btn btn-icon btn-primary btn-block"
-            name="saveAndRefresh"
             type="submit"
             aria-label="save and add a new teammate"
           >
@@ -152,9 +168,8 @@ ClarityIcons.addIcons(logoutIcon, noteIcon, newIcon);
         <div class="clr-col-2">
           <button
             *ngIf="!editedTeammate"
-            [disabled]="formTeammate.invalid"
+            [disabled]="formTeammate().invalid"
             class="btn btn-icon btn-secondary btn-block"
-            name="saveAndRedirect"
             type="submit"
             aria-label="save and redirect to list teammate"
             title="save and redirect to list teammate"
@@ -167,77 +182,49 @@ ClarityIcons.addIcons(logoutIcon, noteIcon, newIcon);
   `,
   styles: [],
 })
-export class AddTeammateComponent implements OnInit, OnChanges {
-  @Input() editedTeammate: TeammateI | undefined = undefined;
-  protected formTeammate: TeammateForm = {} as TeammateForm;
+export class AddTeammateComponent {
+  editedTeammate: InputSignal<TeammateI | undefined> = input();
+  saved: OutputEmitterRef<boolean> = output<boolean>();
+  protected formTeammate = computed(() => {
+    const editedTeammate = this.editedTeammate() ?? new Teammate();
+    return new TeammateForm(editedTeammate, this.maxDaysInASprintValidator);
+  });
+  protected teamService = inject(TeamService);
+  protected maxDaysInASprintValidator = inject(MaxDaysASprintValidator);
+  protected router = inject(Router);
+  protected getButtonText = computed(() =>
+    this.editedTeammate() ? 'edit' : 'add',
+  );
+  protected getButtonIcon = computed(() =>
+    this.editedTeammate() ? 'note' : 'new',
+  );
 
-  constructor(
-    protected teamService: TeamService,
-    protected maxDaysInASprintValidator: MaxDaysASprintValidator,
-    protected router: Router
-  ) {}
-
-  ngOnInit(): void {
-    if (this.editedTeammate) {
-      this.createForm(this.editedTeammate);
-    } else {
-      this.createForm(new Teammate());
-    }
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['editedTeammate']) {
-      if (
-        changes['editedTeammate'].currentValue ===
-        changes['editedTeammate'].previousValue
-      ) {
-        return;
-      }
-
-      this.createForm(changes['editedTeammate'].currentValue);
-    }
-  }
-
-  protected addTeammate(event: string) {
-    const redirect = event === 'saveAndRedirect' ? true : false;
-    if (this.formTeammate.valid) {
+  protected addTeammate() {
+    if (this.formTeammate().valid) {
       try {
         const newTeammate = new Teammate(
-          this.formTeammate.value.name,
-          this.formTeammate.value.availableDaysInAWeek,
-          this.formTeammate.value.holidaysForNextSprint,
-          this.formTeammate.value.meetingDaysAWeek,
-          !!this.formTeammate.value.isNewComer
+          this.formTeammate().value.name,
+          this.formTeammate().value.availableDaysInAWeek,
+          this.formTeammate().value.holidaysForNextSprint,
+          this.formTeammate().value.meetingDaysAWeek,
+          !!this.formTeammate().value.isNewComer,
         );
 
-        if (this.editedTeammate) {
-          this.teamService.editTeammate(newTeammate, this.editedTeammate);
+        const editedTeammate = this.editedTeammate();
+        if (editedTeammate) {
+          this.teamService.editTeammate(newTeammate, editedTeammate);
+          this.saved.emit(true);
         } else {
           this.teamService.addTeammate(newTeammate);
-        }
-        this.createForm(new Teammate());
-
-        if (redirect) {
-          this.router.navigateByUrl('manage-team');
+          const defaultForm = new TeammateForm(
+            new Teammate(),
+            this.maxDaysInASprintValidator,
+          );
+          this.formTeammate().reset(defaultForm.value);
         }
       } catch (e) {
         // @todo add error to form
       }
     }
-  }
-
-  protected getButtonText() {
-    return this.editedTeammate ? 'edit' : 'add';
-  }
-
-  protected getButtonIcon() {
-    return this.editedTeammate ? 'note' : 'new';
-  }
-
-  private createForm(teammate: TeammateI): void {
-    this.formTeammate = new TeammateForm(
-      teammate,
-      this.maxDaysInASprintValidator
-    );
   }
 }
