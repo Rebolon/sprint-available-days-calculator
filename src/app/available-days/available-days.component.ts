@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { CommonModule } from '@angular/common';
+
 import { Component, Signal, computed, inject } from '@angular/core';
 import { ClrAlertModule } from '@clr/angular';
 import TeammateI from '../add-teammate/teammate';
@@ -11,7 +11,7 @@ import { ToFixedPipe } from '../to-fixed.pipe';
 @Component({
   selector: 'app-available-days',
   standalone: true,
-  imports: [CommonModule, ClrAlertModule, ToFixedPipe],
+  imports: [ClrAlertModule, ToFixedPipe],
   template: `
     @if (teamService.getTeammates().length > 0) {
     <clr-alert [clrAlertType]="'info'" [clrAlertClosable]="false">

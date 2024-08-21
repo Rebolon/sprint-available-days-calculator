@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
   Component,
   EventEmitter,
@@ -34,7 +33,6 @@ ClarityIcons.addIcons(logoutIcon, noteIcon, newIcon);
   selector: 'app-add-teammate',
   standalone: true,
   imports: [
-    CommonModule,
     CdsIconModule,
     RouterModule,
     ReactiveFormsModule,
@@ -166,16 +164,17 @@ ClarityIcons.addIcons(logoutIcon, noteIcon, newIcon);
           </button>
         </div>
         <div class="clr-col-2">
-          <button
-            *ngIf="!editedTeammate"
-            [disabled]="formTeammate().invalid"
-            class="btn btn-icon btn-secondary btn-block"
-            type="submit"
-            aria-label="save and redirect to list teammate"
-            title="save and redirect to list teammate"
-          >
-            <cds-icon shape="logout"></cds-icon>
-          </button>
+          @if (!editedTeammate) {
+            <button
+              [disabled]="formTeammate().invalid"
+              class="btn btn-icon btn-secondary btn-block"
+              type="submit"
+              aria-label="save and redirect to list teammate"
+              title="save and redirect to list teammate"
+            >
+              <cds-icon shape="logout"></cds-icon>
+            </button>
+          }
         </div>
       </div>
     </form>

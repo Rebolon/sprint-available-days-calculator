@@ -65,11 +65,12 @@ ClarityIcons.addIcons(angleIcon, userIcon, cogIcon, calculatorIcon, floppyIcon);
                   <cds-icon shape="angle" direction="down"></cds-icon>
                 </button>
                 <clr-dropdown-menu clrPosition="bottom-right">
-                  <a (click)="restore()" class="dropdown-item" clrDropdownItem
+                  <a (click)="restore()" (keyup.enter)="restore()" class="dropdown-item" clrDropdownItem
                     >restore</a
                   >
                   <a
                     (click)="deleteSavedData()"
+                    (keyup.enter)="deleteSavedData()"
                     class="dropdown-item"
                     clrDropdownItem
                     >delete</a
@@ -100,6 +101,7 @@ ClarityIcons.addIcons(angleIcon, userIcon, cogIcon, calculatorIcon, floppyIcon);
           <a
             [attr.disabled]="teamService.getTeammates().length ? 'disabled' : ''"
             (click)="save()"
+            (keyup.enter)="save()"
             class="nav-link nav-icon a-hover"
             ><cds-icon shape="floppy" size="24"></cds-icon
           ></a>
