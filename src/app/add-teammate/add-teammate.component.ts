@@ -1,27 +1,18 @@
-import { CommonModule } from '@angular/common';
 import {
   Component,
-  EventEmitter,
-  OnChanges,
-  OnInit,
-  Output,
-  SimpleChanges,
-  input,
-  output,
-  inject,
-  OutputEmitterRef,
-  InputSignal,
-  effect,
   computed,
-  Signal,
-  EffectRef,
+  inject,
+  input,
+  InputSignal,
+  output,
+  OutputEmitterRef,
 } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { CdsIconModule } from '@cds/angular/icon';
 import { ClarityIcons, logoutIcon, newIcon, noteIcon } from '@cds/core/icon';
 import '@cds/core/icon/register.js';
 import { ClrFormsModule } from '@clr/angular';
+import { IconComponent } from '../icon/icon.component';
 import { TeamService } from '../manage-team/team.service';
 import { TeammateFormTitlePipe } from '../manage-team/teammate-form-title.pipe';
 import { MaxDaysASprintValidator } from './max-days-a-sprint.validator';
@@ -34,12 +25,11 @@ ClarityIcons.addIcons(logoutIcon, noteIcon, newIcon);
   selector: 'app-add-teammate',
   standalone: true,
   imports: [
-    CommonModule,
-    CdsIconModule,
     RouterModule,
     ReactiveFormsModule,
     ClrFormsModule,
     TeammateFormTitlePipe,
+    IconComponent,
   ],
   template: `
     <h1>{{ editedTeammate() | teammateFormTitle }}</h1>
@@ -162,20 +152,21 @@ ClarityIcons.addIcons(logoutIcon, noteIcon, newIcon);
             type="submit"
             aria-label="save and add a new teammate"
           >
-            <cds-icon [attr.shape]="getButtonIcon()"></cds-icon>
+            <app-icon [shape]="getButtonIcon()"></app-icon>
           </button>
         </div>
         <div class="clr-col-2">
-          <button
-            *ngIf="!editedTeammate"
-            [disabled]="formTeammate().invalid"
-            class="btn btn-icon btn-secondary btn-block"
-            type="submit"
-            aria-label="save and redirect to list teammate"
-            title="save and redirect to list teammate"
-          >
-            <cds-icon shape="logout"></cds-icon>
-          </button>
+          @if (!editedTeammate) {
+            <button
+              [disabled]="formTeammate().invalid"
+              class="btn btn-icon btn-secondary btn-block"
+              type="submit"
+              aria-label="save and redirect to list teammate"
+              title="save and redirect to list teammate"
+            >
+              <app-icon shape="logout"></app-icon>
+            </button>
+          }
         </div>
       </div>
     </form>

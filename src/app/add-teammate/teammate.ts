@@ -10,25 +10,13 @@ export default interface TeammateI {
 }
 
 export class Teammate implements TeammateI {
-  readonly name: string;
-  readonly availableDaysInAWeek: number;
-  readonly holidaysForNextSprint: number;
-  readonly meetingDaysAWeek: number;
-  readonly isNewComer: boolean;
-
   constructor(
-    name: string = '',
-    availableDaysInWeek = 5,
-    holidaysForNextSprint = 0,
-    meetingDaysAWeek = 0,
-    isNewComer = false
-  ) {
-    this.name = name;
-    this.availableDaysInAWeek = availableDaysInWeek;
-    this.holidaysForNextSprint = holidaysForNextSprint;
-    this.meetingDaysAWeek = meetingDaysAWeek;
-    this.isNewComer = isNewComer;
-  }
+    readonly name: string = '',
+    readonly availableDaysInAWeek: number = 5,
+    readonly holidaysForNextSprint: number = 0,
+    readonly meetingDaysAWeek: number = 0,
+    readonly isNewComer: boolean = false,
+  ) {}
 
   getAvailableDaysInSprint(nbWeeksForOneSprint: number): number {
     const nbOfDaysInASprintForTeammate =
