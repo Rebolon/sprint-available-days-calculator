@@ -11,22 +11,21 @@ import TeammateI from '../add-teammate/teammate';
 import { ParametersService } from '../edit-parameters/parameters.service';
 import { TeamService } from '../manage-team/team.service';
 import { ToFixedPipe } from '../to-fixed.pipe';
-
+import { CdsIconModule } from '@cds/angular';
 import { ClarityIcons, pencilIcon } from '@cds/core/icon';
 import '@cds/core/icon/register.js';
 import { IconComponent } from '../icon/icon.component';
 ClarityIcons.addIcons(pencilIcon);
 
 @Component({
-  selector: 'app-list-team',
-  standalone: true,
-  imports: [IconComponent, ToFixedPipe, AddTeammateComponent],
-  template: `
+    selector: 'app-list-team',
+    imports: [CdsIconModule, ToFixedPipe, AddTeammateComponent],
+    template: `
     @if (team().length > 0) {
       <h1>List of teammates</h1>
     }
     <ul>
-      @for (teammate of team(); track teammate.name) {
+      @for (teammate of team(); track teammate) {
         <li>
           <button
             [disabled]="editedTeammate() && editedTeammate() === teammate"
@@ -54,7 +53,7 @@ ClarityIcons.addIcons(pencilIcon);
       ></app-add-teammate>
     }
   `,
-  styles: 'ul > li { list-style: none; }',
+    styles: 'ul > li { list-style: none; }'
 })
 export class ListTeamComponent {
   protected teamService = inject(TeamService);

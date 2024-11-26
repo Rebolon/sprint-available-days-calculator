@@ -14,48 +14,42 @@ export const routes: Routes = [
   },
   {
     path: 'manage-team',
-    /* * / component: ManageTeamComponent,  /* */
-    /* */ loadComponent: () =>
+    loadComponent: () =>
       import('./manage-team/manage-team.component').then(
         (c) => c.ManageTeamComponent
       ) /* */,
   },
   {
     path: 'list-team',
-    /* * / component: ListTeamComponent, /* */
-    /* */ loadComponent: () =>
+    loadComponent: () =>
       import('./list-team/list-team.component').then(
         (c) => c.ListTeamComponent
       ) /* */,
   },
   {
     path: 'add-teammate',
-    /* * / component: AddTeammateComponent, /* */
-    /* */ loadComponent: () =>
+    loadComponent: () =>
       import('./add-teammate/add-teammate.component').then(
         (c) => c.AddTeammateComponent
       ) /* */,
   },
   {
     path: 'edit-teammate/:id',
-    /* * / component: AddTeammateComponent, /* */
-    /* */ loadComponent: () =>
+    loadComponent: () =>
       import('./add-teammate/add-teammate.component').then(
         (c) => c.AddTeammateComponent
       ) /* */,
   },
   {
     path: 'edit-parameters',
-    /* * / component: EditParametersComponent, /* */
-    /* */ loadComponent: () =>
+    loadComponent: () =>
       import('./edit-parameters/edit-parameters.component').then(
         (c) => c.EditParametersComponent
       ) /* */,
   },
   {
     path: '**',
-    /* * / component: Page404Component, /* */
-    /* */ loadComponent: () =>
+    loadComponent: () =>
       import('./page404.component').then((c) => c.Page404Component) /* */,
   },
 ];

@@ -9,10 +9,9 @@ import { ParametersForm } from './parameters.form';
 import { ParametersService } from './parameters.service';
 
 @Component({
-  selector: 'app-edit-parameters',
-  standalone: true,
-  imports: [ClrFormsModule, ReactiveFormsModule, AvailableDaysComponent],
-  template: `
+    selector: 'app-edit-parameters',
+    imports: [ClrFormsModule, ReactiveFormsModule, AvailableDaysComponent],
+    template: `
     <h1>Adapt parameters</h1>
     <form [formGroup]="formParameters()" clrForm clrLayout="horizontal">
       <clr-input-container>
@@ -92,7 +91,7 @@ import { ParametersService } from './parameters.service';
 
     <app-available-days></app-available-days>
   `,
-  styles: [],
+    styles: []
 })
 export class EditParametersComponent {
   protected parametersService = inject(ParametersService);

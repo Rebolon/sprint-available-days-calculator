@@ -7,15 +7,14 @@ import { ListTeamComponent } from '../list-team/list-team.component';
 import { TeamService } from './team.service';
 
 @Component({
-  selector: 'app-manage-team',
-  standalone: true,
-  imports: [
-    RouterModule,
-    ClrAlertModule,
-    ListTeamComponent,
-    AvailableDaysComponent,
-  ],
-  template: `
+    selector: 'app-manage-team',
+    imports: [
+        RouterModule,
+        ClrAlertModule,
+        ListTeamComponent,
+        AvailableDaysComponent,
+    ],
+    template: `
     @if (this.team().length === 0) {
       <clr-alert [clrAlertType]="'info'" [clrAlertClosable]="false">
         <clr-alert-item>
@@ -31,7 +30,7 @@ import { TeamService } from './team.service';
 
     <app-list-team></app-list-team>
   `,
-  styles: [],
+    styles: []
 })
 export class ManageTeamComponent {
   protected teamService = inject(TeamService);

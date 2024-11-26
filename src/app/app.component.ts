@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { CommonModule } from '@angular/common';
-import { Component, Signal, computed } from '@angular/core';
+import { Component, Signal, computed, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import {
   ClarityIcons,
@@ -25,17 +25,16 @@ import { IconComponent } from './icon/icon.component';
 ClarityIcons.addIcons(angleIcon, userIcon, cogIcon, calculatorIcon, floppyIcon);
 
 @Component({
-  standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule,
-    ClrAlertModule,
-    ClrDropdownModule,
-    IconComponent,
-  ],
-  providers: [TeamService, ParametersService, AlertService],
-  selector: 'app-root',
-  template: `
+    imports: [
+        CommonModule,
+        RouterModule,
+        CdsIconModule,
+        ClrAlertModule,
+        ClrDropdownModule,
+    ],
+    providers: [TeamService, ParametersService, AlertService],
+    selector: 'app-root',
+    template: `
     <div class="main-container">
       <clr-alerts>
         @if (alert.hasAlert() | async) {
@@ -119,9 +118,14 @@ ClarityIcons.addIcons(angleIcon, userIcon, cogIcon, calculatorIcon, floppyIcon);
       </div>
     </div>
   `,
-  styles: '.a-hover { cursor: pointer; }',
+    styles: '.a-hover { cursor: pointer; }'
 })
 export class AppComponent {
+  protected alert = inject(AlertService);
+  protected teamService = inject(TeamService);
+  protected parametersService = inject(ParametersService);
+  protected storageService = inject(StorageService);
+
   title = 'sprint-resources-availability';
   protected getSavedTeammates: Signal<string> = computed(() =>
     this.teamService.getTeammates()
@@ -130,13 +134,6 @@ export class AppComponent {
   )
   // @todo do we need to manage unsubscribe with toSignal ?
   protected hasSavedData = false;
-
-  constructor(
-    protected alert: AlertService,
-    protected teamService: TeamService,
-    protected parametersService: ParametersService,
-    protected storageService: StorageService,
-  ) {}
 
   protected save() {
     this.storageService.save({team: this.teamService.getTeammates(), parameters: this.parametersService.getParameters()});

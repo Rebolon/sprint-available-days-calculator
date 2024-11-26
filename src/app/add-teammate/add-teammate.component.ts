@@ -22,20 +22,19 @@ import { TeammateForm } from './teammate.form';
 ClarityIcons.addIcons(logoutIcon, noteIcon, newIcon);
 
 @Component({
-  selector: 'app-add-teammate',
-  standalone: true,
-  imports: [
-    RouterModule,
-    ReactiveFormsModule,
-    ClrFormsModule,
-    TeammateFormTitlePipe,
-    IconComponent,
-  ],
-  template: `
+    selector: 'app-add-teammate',
+    imports: [
+        CdsIconModule,
+        RouterModule,
+        ReactiveFormsModule,
+        ClrFormsModule,
+        TeammateFormTitlePipe,
+    ],
+    template: `
     <h1>{{ editedTeammate() | teammateFormTitle }}</h1>
     <form
       [formGroup]="formTeammate()"
-      (ngSubmit)="addTeammate()"
+      (ngSubmit)="addTeammate($event.submitter.name)"
       clrForm
       clrLayout="horizontal"
     >
@@ -151,27 +150,30 @@ ClarityIcons.addIcons(logoutIcon, noteIcon, newIcon);
             class="btn btn-icon btn-primary btn-block"
             type="submit"
             aria-label="save and add a new teammate"
+            title="save and add a new teammate"
+            name="saveAndRefresh"
           >
             <app-icon [shape]="getButtonIcon()"></app-icon>
           </button>
         </div>
         <div class="clr-col-2">
-          @if (!editedTeammate) {
+          @if (!editedTeammate()) {
             <button
               [disabled]="formTeammate().invalid"
               class="btn btn-icon btn-secondary btn-block"
               type="submit"
               aria-label="save and redirect to list teammate"
               title="save and redirect to list teammate"
+              name="saveAndRedirect"
             >
-              <app-icon shape="logout"></app-icon>
+              <cds-icon shape="logout"></cds-icon>
             </button>
           }
         </div>
       </div>
     </form>
   `,
-  styles: [],
+    styles: []
 })
 export class AddTeammateComponent {
   editedTeammate: InputSignal<TeammateI | undefined> = input();
@@ -190,7 +192,8 @@ export class AddTeammateComponent {
     this.editedTeammate() ? 'note' : 'new',
   );
 
-  protected addTeammate() {
+  protected addTeammate(event: string) {
+    const redirect = event === 'saveAndRedirect' ? true : false;
     if (this.formTeammate().valid) {
       try {
         const newTeammate = new Teammate(
@@ -207,11 +210,20 @@ export class AddTeammateComponent {
           this.saved.emit(true);
         } else {
           this.teamService.addTeammate(newTeammate);
-          const defaultForm = new TeammateForm(
-            new Teammate(),
-            this.maxDaysInASprintValidator,
-          );
-          this.formTeammate().reset(defaultForm.value);
+
+          if (redirect) {
+            this.router.navigateByUrl('manage-team');
+          } else {
+            const defaultForm = new TeammateForm(
+              new Teammate(),
+              this.maxDaysInASprintValidator,
+            );
+            this.formTeammate().reset(defaultForm.value);
+            this.formTeammate().markAsPristine();
+            this.formTeammate().markAsUntouched();
+            this.formTeammate().controls['name'].markAsUntouched();
+            this.formTeammate().controls['name'].markAsPristine();
+          }
         }
       } catch (e) {
         // @todo add error to form

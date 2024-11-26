@@ -1,0 +1,1 @@
+import{Sa as r}from"./chunk-BUWQDSLL.js";var p=(()=>{class e{transform(i,...t){if(i===void 0)return"";let n=t.length?t[0]:2;return i.toFixed(n)}static{this.\u0275fac=function(t){return new(t||e)}}static{this.\u0275pipe=r({name:"toFixed",type:e,pure:!0})}}return e})();export{p as a};
