@@ -18,10 +18,9 @@ import '@cds/core/icon/register.js';
 ClarityIcons.addIcons(pencilIcon);
 
 @Component({
-  selector: 'app-list-team',
-  standalone: true,
-  imports: [CdsIconModule, ToFixedPipe, AddTeammateComponent],
-  template: `
+    selector: 'app-list-team',
+    imports: [CdsIconModule, ToFixedPipe, AddTeammateComponent],
+    template: `
     @if (team().length > 0) {
       <h1>List of teammates</h1>
     }
@@ -54,7 +53,7 @@ ClarityIcons.addIcons(pencilIcon);
       ></app-add-teammate>
     }
   `,
-  styles: 'ul > li { list-style: none; }',
+    styles: 'ul > li { list-style: none; }'
 })
 export class ListTeamComponent {
   protected teamService = inject(TeamService);

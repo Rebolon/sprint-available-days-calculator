@@ -1,0 +1,1 @@
+import{Pa as o,ub as n}from"./chunk-BUWQDSLL.js";var s=(()=>{class e{static{this.\u0275fac=function(t){return new(t||e)}}static{this.\u0275cmp=o({type:e,selectors:[["app-page-404"]],decls:1,vars:0,template:function(t,p){t&1&&n(0,"Whoops, you just landed on nowhere (Page not found ;-) ) ")},encapsulation:2})}}return e})();export{s as Page404Component};

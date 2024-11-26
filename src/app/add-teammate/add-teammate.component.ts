@@ -22,16 +22,15 @@ import { TeammateForm } from './teammate.form';
 ClarityIcons.addIcons(logoutIcon, noteIcon, newIcon);
 
 @Component({
-  selector: 'app-add-teammate',
-  standalone: true,
-  imports: [
-    CdsIconModule,
-    RouterModule,
-    ReactiveFormsModule,
-    ClrFormsModule,
-    TeammateFormTitlePipe,
-  ],
-  template: `
+    selector: 'app-add-teammate',
+    imports: [
+        CdsIconModule,
+        RouterModule,
+        ReactiveFormsModule,
+        ClrFormsModule,
+        TeammateFormTitlePipe,
+    ],
+    template: `
     <h1>{{ editedTeammate() | teammateFormTitle }}</h1>
     <form
       [formGroup]="formTeammate()"
@@ -174,7 +173,7 @@ ClarityIcons.addIcons(logoutIcon, noteIcon, newIcon);
       </div>
     </form>
   `,
-  styles: [],
+    styles: []
 })
 export class AddTeammateComponent {
   editedTeammate: InputSignal<TeammateI | undefined> = input();

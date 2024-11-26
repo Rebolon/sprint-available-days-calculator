@@ -3,7 +3,7 @@ import {
   AsyncValidator,
   ValidationErrors,
 } from '@angular/forms';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { ParametersService } from '../edit-parameters/parameters.service';
 import ParameterI from '../edit-parameters/parameters';
 import { delay, map, Observable } from 'rxjs';
@@ -11,7 +11,7 @@ import { toObservable } from '@angular/core/rxjs-interop';
 
 @Injectable({ providedIn: 'root' })
 export class MaxDaysASprintValidator implements AsyncValidator {
-  constructor(private parametersService: ParametersService) {}
+  private parametersService = inject(ParametersService);
 
   validate(control: AbstractControl): Observable<ValidationErrors | null> {
     const availableDaysInAWeek = control.get('availableDaysInAWeek');

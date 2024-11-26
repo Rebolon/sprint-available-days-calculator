@@ -7,10 +7,9 @@ import { TeamService } from '../manage-team/team.service';
 import { ToFixedPipe } from '../to-fixed.pipe';
 
 @Component({
-  selector: 'app-available-days',
-  standalone: true,
-  imports: [ClrAlertModule, ToFixedPipe],
-  template: `
+    selector: 'app-available-days',
+    imports: [ClrAlertModule, ToFixedPipe],
+    template: `
     @if (teamService.getTeammates().length > 0) {
       <clr-alert [clrAlertType]="'info'" [clrAlertClosable]="false">
         <clr-alert-item>
@@ -22,7 +21,7 @@ import { ToFixedPipe } from '../to-fixed.pipe';
       </clr-alert>
     }
   `,
-  styles: [],
+    styles: []
 })
 export class AvailableDaysComponent {
   protected teamService = inject(TeamService);
