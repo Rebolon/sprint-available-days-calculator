@@ -9,10 +9,10 @@ import {
 } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { CdsIconModule } from '@cds/angular/icon';
 import { ClarityIcons, logoutIcon, newIcon, noteIcon } from '@cds/core/icon';
 import '@cds/core/icon/register.js';
 import { ClrFormsModule } from '@clr/angular';
+import { IconComponent } from '../icon/icon.component';
 import { TeamService } from '../manage-team/team.service';
 import { TeammateFormTitlePipe } from '../manage-team/teammate-form-title.pipe';
 import { MaxDaysASprintValidator } from './max-days-a-sprint.validator';
@@ -153,7 +153,7 @@ ClarityIcons.addIcons(logoutIcon, noteIcon, newIcon);
             title="save and add a new teammate"
             name="saveAndRefresh"
           >
-            <cds-icon [attr.shape]="getButtonIcon()"></cds-icon>
+            <app-icon [shape]="getButtonIcon()"></app-icon>
           </button>
         </div>
         <div class="clr-col-2">

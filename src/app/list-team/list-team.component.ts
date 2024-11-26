@@ -11,10 +11,10 @@ import TeammateI from '../add-teammate/teammate';
 import { ParametersService } from '../edit-parameters/parameters.service';
 import { TeamService } from '../manage-team/team.service';
 import { ToFixedPipe } from '../to-fixed.pipe';
-
 import { CdsIconModule } from '@cds/angular';
 import { ClarityIcons, pencilIcon } from '@cds/core/icon';
 import '@cds/core/icon/register.js';
+import { IconComponent } from '../icon/icon.component';
 ClarityIcons.addIcons(pencilIcon);
 
 @Component({
@@ -33,7 +33,7 @@ ClarityIcons.addIcons(pencilIcon);
             class="btn btn-link"
             aria-label="edit"
           >
-            <cds-icon shape="pencil"></cds-icon>
+            <app-icon shape="pencil"></app-icon>
           </button>
           {{ teammate.name }}:
           {{

@@ -2,7 +2,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Signal, computed, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { CdsIconModule } from '@cds/angular';
 import {
   ClarityIcons,
   angleIcon,
@@ -21,6 +20,7 @@ import {
 import { ParametersService } from './edit-parameters/parameters.service';
 import { TeamService } from './manage-team/team.service';
 import { StorageService } from './storage.service';
+import { IconComponent } from './icon/icon.component';
 
 ClarityIcons.addIcons(angleIcon, userIcon, cogIcon, calculatorIcon, floppyIcon);
 
@@ -61,14 +61,15 @@ ClarityIcons.addIcons(angleIcon, userIcon, cogIcon, calculatorIcon, floppyIcon);
               <clr-dropdown>
                 <button class="dropdown-toggle" clrDropdownTrigger>
                   Actions
-                  <cds-icon shape="angle" direction="down"></cds-icon>
+                  <app-icon shape="angle" direction="down"></app-icon>
                 </button>
                 <clr-dropdown-menu clrPosition="bottom-right">
-                  <a (click)="restore()" class="dropdown-item" clrDropdownItem
+                  <a (click)="restore()" (keyup.enter)="restore()" class="dropdown-item" clrDropdownItem
                     >restore</a
                   >
                   <a
                     (click)="deleteSavedData()"
+                    (keyup.enter)="deleteSavedData()"
                     class="dropdown-item"
                     clrDropdownItem
                     >delete</a
@@ -88,19 +89,20 @@ ClarityIcons.addIcons(angleIcon, userIcon, cogIcon, calculatorIcon, floppyIcon);
         </div>
         <div class="header-nav">
           <a class="nav-link nav-icon" routerLink="manage-team"
-            ><cds-icon shape="calculator" size="24"></cds-icon
+            ><app-icon shape="calculator" size="24"></app-icon
           ></a>
           <a class="nav-link nav-icon" routerLink="add-teammate"
-            ><cds-icon shape="user" size="24"></cds-icon
+            ><app-icon shape="user" size="24"></app-icon
           ></a>
           <a class="nav-link nav-icon" routerLink="edit-parameters"
-            ><cds-icon shape="cog" size="24"></cds-icon
+            ><app-icon shape="cog" size="24"></app-icon
           ></a>
           <a
             [attr.disabled]="teamService.getTeammates().length ? 'disabled' : ''"
             (click)="save()"
+            (keyup.enter)="save()"
             class="nav-link nav-icon a-hover"
-            ><cds-icon shape="floppy" size="24"></cds-icon
+            ><app-icon shape="floppy" size="24"></app-icon
           ></a>
         </div>
       </header>
